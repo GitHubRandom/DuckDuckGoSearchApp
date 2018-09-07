@@ -19,6 +19,7 @@
 
         <EditText
             android:id="@+id/search_field"
+            android:transitionName="@string/search_bar_transition_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_hint"
