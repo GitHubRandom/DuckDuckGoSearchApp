@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 public class SearchTask extends AsyncTask<Void, Void, String> {
 
     private static final String SEARCH_URL = "https://duckduckgo.com/?q=";
+    private static final String SEARCH_URL_END = "&ia=web";
     private String searchTerm;
     private OnTaskFinish onTaskFinish;
     private Context context;
@@ -26,7 +27,7 @@ public class SearchTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... voids) {
         searchTerm = searchTerm.replace(" ", "+");
-        return HttpParser.get(SEARCH_URL + searchTerm);
+        return HttpParser.get(SEARCH_URL + searchTerm + SEARCH_URL_END);
     }
 
     @Override

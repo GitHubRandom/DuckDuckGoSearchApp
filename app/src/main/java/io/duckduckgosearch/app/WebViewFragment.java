@@ -17,7 +17,7 @@ public class WebViewFragment extends android.support.v4.app.Fragment {
     public WebViewFragment() {
     }
 
-    public WebViewFragment newInstance(String data) {
+    public static WebViewFragment newInstance(String data) {
         WebViewFragment webViewFragment = new WebViewFragment();
         Bundle bundle = new Bundle();
         bundle.putString("data", data);
@@ -32,6 +32,7 @@ public class WebViewFragment extends android.support.v4.app.Fragment {
         data = getArguments().getString("data");
         webView = view.findViewById(R.id.search_web_view);
         webView.loadData(data, "text/html", "UTF-8");
+        webView.getSettings().setJavaScriptEnabled(true);
         return view;
     }
 }
