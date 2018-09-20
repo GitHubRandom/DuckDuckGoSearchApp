@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -35,14 +37,15 @@ public class SearchActivity extends AppCompatActivity implements SearchTask.OnTa
         progressBar = findViewById(R.id.search_progress);
 
         searchBar = findViewById(R.id.search_bar_edittext);
+        searchBar.requestFocus();
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 progressBar.setVisibility(View.VISIBLE);
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    SearchTask searchTask = new SearchTask(v.getText().toString(), context);
-                    searchTask.execute();
-                }
+                WebViewFragment webViewFragment = WebViewFragment.newInstance(v.getText().toString());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, webViewFragment)
+                        .commit();
                 return false;
             }
         });
