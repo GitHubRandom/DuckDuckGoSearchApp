@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".SearchActivity">
-    
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/search_bar_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <EditText
@@ -21,8 +22,8 @@
             android:hint="@string/search_hint"
             android:background="@drawable/search_field_bg"
             android:inputType="text" />
-        
-    </RelativeLayout>
+
+    </LinearLayout>
     
     <FrameLayout
         android:id="@+id/frame_layout"
