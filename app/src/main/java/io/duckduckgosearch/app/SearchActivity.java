@@ -1,5 +1,6 @@
 package io.duckduckgosearch.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,23 +18,27 @@ public class SearchActivity extends AppCompatActivity {
     EditText searchBar;
     FragmentManager fragmentManager;
     ProgressBar progressBar;
-    Context context;
+    Activity activity;
+    ImageView duckLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        duckLogo = findViewById(R.id.duck_logo);
+
         fragmentManager = getSupportFragmentManager();
 
-        context = this;
+        activity = this;
 
         progressBar = findViewById(R.id.search_progress);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
         searchBar = findViewById(R.id.search_bar_edittext);
-        searchBar.requestFocus();
+        if (savedInstanceState == null) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            searchBar.requestFocus();
+        }
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -42,7 +48,18 @@ public class SearchActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, webViewFragment)
                         .commit();
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 return false;
+            }
+        });
+        searchBar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    duckLogo.setVisibility(View.GONE);
+                } else {
+                    duckLogo.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

@@ -1,6 +1,9 @@
 package io.duckduckgosearch.app;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -17,8 +21,15 @@ public class WebViewFragment extends android.support.v4.app.Fragment {
     private static final String SEARCH_URL = "https://duckduckgo.com/?q=";
     String data = "";
     WebView webView;
+    Context context;
 
     public WebViewFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     public static WebViewFragment newInstance(@NonNull String data) {
@@ -49,6 +60,16 @@ public class WebViewFragment extends android.support.v4.app.Fragment {
                 );
                 webView.setVisibility(View.VISIBLE);
                 webView.requestFocus();
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (!url.contains("duckduckgo.com/?q=")) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                    return true;
+                }
+                return false;
             }
         });
         webView.loadUrl(SEARCH_URL + data);
