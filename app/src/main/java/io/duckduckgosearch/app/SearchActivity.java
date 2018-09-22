@@ -10,7 +10,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SearchActivity extends AppCompatActivity {
 

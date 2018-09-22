@@ -1,5 +1,6 @@
 package io.duckduckgosearch.app;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -30,6 +29,7 @@ public class WebViewFragment extends android.support.v4.app.Fragment {
         return webViewFragment;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class WebViewFragment extends android.support.v4.app.Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 webView.loadUrl(
-                        "javascript:$(\".header--aside\").remove();"
+                        "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
                 );
                 webView.setVisibility(View.VISIBLE);
                 webView.requestFocus();
