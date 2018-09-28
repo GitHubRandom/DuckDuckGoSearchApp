@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 public class HomeActivity extends AppCompatActivity {
 
     EditText searchField;
     Context context;
+    ImageButton settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,15 @@ public class HomeActivity extends AppCompatActivity {
                         .makeSceneTransitionAnimation(HomeActivity.this,
                                 searchField, context.getResources().getString(R.string.search_bar_transition_name));
                 startActivity(intent, optionsCompat.toBundle());
+            }
+        });
+
+        settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
             }
         });
     }
