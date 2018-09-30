@@ -1,25 +1,28 @@
 package io.duckduckgosearch.app;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.webkit.CookieManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 
-public class SettingsActivity extends AppCompatActivity {
+import androidx.annotation.Nullable;
 
-    public static final String SETTINGS_URL = "https://duckduckgo.com/settings";
-    WebView settingsWebView;
+public class SettingsActivity extends PreferenceActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new SettingsFragment())
+                .commit();
+    }
 
-        CookieManager.getInstance().setAcceptCookie(true);
 
-        settingsWebView = findViewById(R.id.settings_web_view);
-        settingsWebView.loadUrl(SETTINGS_URL);
+    public static class SettingsFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.settings_screen);
+        }
     }
 }

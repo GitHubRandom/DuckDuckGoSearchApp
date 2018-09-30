@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:title="@string/settings_theme_title"
+        android:summary="@string/settings_theme_title" />
+
+    <SwitchPreference
+        android:title="@string/settings_search_history_title"
+        android:summary="@string/settings_search_history_summary"
+        android:key="search_history"/>
+
+</PreferenceScreen>
