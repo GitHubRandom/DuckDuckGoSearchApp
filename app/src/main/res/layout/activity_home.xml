@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -16,6 +17,7 @@
         android:gravity="center">
 
         <ImageView
+            android:id="@+id/duck_logo"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:contentDescription="@string/app_name"
@@ -26,9 +28,9 @@
             android:id="@+id/search_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search_hint"
             android:background="@drawable/search_field_bg"
             android:focusable="false"
+            android:hint="@string/search_hint"
             android:inputType="text" />
 
     </LinearLayout>
@@ -39,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@android:color/transparent"
         android:layout_margin="15dp"
         app:srcCompat="@drawable/ic_settings_24px" />
 

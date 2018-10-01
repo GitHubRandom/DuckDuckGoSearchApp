@@ -3,7 +3,11 @@
 
     <ListPreference
         android:title="@string/settings_theme_title"
-        android:summary="@string/settings_theme_title" />
+        android:summary="@string/settings_theme_title"
+        android:key="app_theme"
+        android:entries="@array/settings_theme_entries"
+        android:entryValues="@array/settings_theme_values"
+        android:defaultValue="default"/>
 
     <SwitchPreference
         android:title="@string/settings_search_history_title"

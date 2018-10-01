@@ -2,24 +2,34 @@ package io.duckduckgosearch.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 public class HomeActivity extends AppCompatActivity {
 
     EditText searchField;
     Context context;
     ImageButton settingsButton;
+    SharedPreferences preferences;
+    boolean darkTheme = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getString("app_theme", "default").equals("dark")) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+            darkTheme = true;
+        }
         setContentView(R.layout.activity_home);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -48,5 +58,12 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(settingsIntent);
             }
         });
+
+        if (darkTheme) {
+            searchField.setBackground(getResources().getDrawable(R.drawable.search_field_bg_dark));
+            findViewById(R.id.home_root).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+            ((ImageView)findViewById(R.id.duck_logo)).setImageResource(R.drawable.ic_duckduckgo_white_logo);
+            settingsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_24px_white));
+        }
     }
 }

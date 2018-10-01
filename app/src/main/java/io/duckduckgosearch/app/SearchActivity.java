@@ -4,7 +4,10 @@ import android.app.Activity;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,11 +23,22 @@ public class SearchActivity extends AppCompatActivity {
     ProgressBar progressBar;
     Activity activity;
     ImageView duckLogo;
+    SharedPreferences preferences;
+    boolean darkTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getString("app_theme", "default").equals("dark")) {
+            setTheme(R.style.AppTheme_Dark_NoActionBar);
+            darkTheme = true;
+        }
         setContentView(R.layout.activity_search);
+
+        if (darkTheme) {
+            findViewById(R.id.frame_layout).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+        }
 
         duckLogo = findViewById(R.id.duck_logo);
 
@@ -62,5 +76,10 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+        if (darkTheme) {
+            duckLogo.setImageResource(R.drawable.ic_duckduckgo_white_logo);
+            findViewById(R.id.search_bar_root).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+            searchBar.setBackground(getResources().getDrawable(R.drawable.search_field_bg_dark));
+        }
     }
 }
