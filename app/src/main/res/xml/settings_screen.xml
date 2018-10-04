@@ -9,6 +9,8 @@
         android:entryValues="@array/settings_theme_values"
         android:defaultValue="default"/>
 
+    <!--TODO: Fix settings-->
+
     <SwitchPreference
         android:title="@string/settings_search_history_title"
         android:summary="@string/settings_search_history_summary"

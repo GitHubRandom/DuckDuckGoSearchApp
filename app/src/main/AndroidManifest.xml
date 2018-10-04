@@ -11,9 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".HomeActivity">
+        <activity android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <receiver android:name=".SearchWidget">
             <intent-filter>
@@ -34,7 +36,8 @@
         </receiver>
 
         <activity android:name=".SettingsActivity"
-            android:theme="@style/AppTheme" />
+            android:parentActivityName=".HomeActivity"
+            android:label="@string/settings"/>
 
     </application>
 
