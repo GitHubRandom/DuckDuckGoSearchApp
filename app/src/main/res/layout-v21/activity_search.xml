@@ -26,15 +26,32 @@
             android:visibility="gone"
             app:srcCompat="@drawable/ic_duckduckgo_logo" />
 
-        <EditText
-            android:id="@+id/search_bar_edittext"
+        <RelativeLayout
+            android:id="@+id/search_bar_edittext_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/search_field_bg"
-            android:hint="@string/search_hint"
-            android:inputType="text"
-            android:transitionName="@string/search_bar_transition_name" />
+            android:transitionName="@string/search_bar_transition_name"
+            android:background="@drawable/search_field_bg">
+
+            <EditText
+                android:id="@+id/search_bar_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="@string/search_hint"
+                android:inputType="text" />
+
+            <ImageButton
+                android:id="@+id/erase_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_outline_close_24px"
+                android:background="@android:color/transparent"
+                android:layout_alignEnd="@id/search_bar_edittext"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
 
     </LinearLayout>
     

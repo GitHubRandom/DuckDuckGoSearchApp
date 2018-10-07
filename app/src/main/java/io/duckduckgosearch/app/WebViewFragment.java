@@ -6,18 +6,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -31,6 +32,11 @@ public class WebViewFragment extends Fragment {
     WebView webView;
     Context context;
     SharedPreferences preferences;
+    OnSearchTermChange onSearchTermChange;
+
+    public interface OnSearchTermChange {
+        void onSearchTermChange(String searchTerm);
+    }
 
     public WebViewFragment() {
     }
@@ -90,12 +96,24 @@ public class WebViewFragment extends Fragment {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(browserIntent);
                     return true;
+                } else {
+                    onSearchTermChange = (OnSearchTermChange) context;
+                    try {
+                        onSearchTermChange.onSearchTermChange(
+                                URLDecoder.decode(url.substring(url.indexOf("?q=") + 3, url.indexOf("&")), "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return false;
             }
         });
         webView.loadUrl(SEARCH_URL + data);
         return view;
+    }
+
+    void requestFocusOnWebView() {
+        webView.requestFocus();
     }
 
 }

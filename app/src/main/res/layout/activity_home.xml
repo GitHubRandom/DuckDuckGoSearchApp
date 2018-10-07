@@ -24,14 +24,21 @@
             app:srcCompat="@drawable/ic_duckduckgo_logo"
             android:layout_marginBottom="15dp"/>
 
-        <EditText
+        <RelativeLayout
             android:id="@+id/search_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/search_field_bg"
-            android:focusable="false"
-            android:hint="@string/search_hint"
-            android:inputType="text" />
+            android:background="@drawable/search_field_bg">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:focusable="false"
+                android:hint="@string/search_hint"
+                android:inputType="text" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

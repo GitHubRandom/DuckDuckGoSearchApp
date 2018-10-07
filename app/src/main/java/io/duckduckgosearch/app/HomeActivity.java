@@ -4,19 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
-public class HomeActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 
-    EditText searchField;
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+
+    RelativeLayout searchField;
     Context context;
     ImageButton settingsButton;
     SharedPreferences preferences;
@@ -39,16 +40,8 @@ public class HomeActivity extends AppCompatActivity {
         context = this;
 
         searchField = findViewById(R.id.search_field);
-        searchField.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
-                        .makeSceneTransitionAnimation(HomeActivity.this,
-                                searchField, context.getResources().getString(R.string.search_bar_transition_name));
-                startActivity(intent, optionsCompat.toBundle());
-            }
-        });
+        searchField.setOnClickListener(this);
+        findViewById(R.id.search_field_edittext).setOnClickListener(this);
 
         settingsButton = findViewById(R.id.settings_button);
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -65,5 +58,14 @@ public class HomeActivity extends AppCompatActivity {
             ((ImageView)findViewById(R.id.duck_logo)).setImageResource(R.drawable.ic_duckduckgo_white_logo);
             settingsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_24px_white));
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(HomeActivity.this,
+                        searchField, context.getResources().getString(R.string.search_bar_transition_name));
+        startActivity(intent, optionsCompat.toBundle());
     }
 }

@@ -16,23 +16,31 @@
         android:layout_margin="16dp"
         android:gravity="center">
 
-            <ImageView
-                android:id="@+id/duck_logo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:contentDescription="@string/app_name"
-                app:srcCompat="@drawable/ic_duckduckgo_logo"
-                android:layout_marginBottom="15dp"/>
+        <ImageView
+            android:id="@+id/duck_logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/ic_duckduckgo_logo"
+            android:layout_marginBottom="15dp"/>
+
+        <RelativeLayout
+            android:id="@+id/search_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:transitionName="@string/search_bar_transition_name"
+            android:background="@drawable/search_field_bg">
 
             <EditText
-                android:id="@+id/search_field"
-                android:transitionName="@string/search_bar_transition_name"
+                android:id="@+id/search_field_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search_hint"
-                android:background="@drawable/search_field_bg"
+                android:background="@android:color/transparent"
                 android:focusable="false"
+                android:hint="@string/search_hint"
                 android:inputType="text" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
