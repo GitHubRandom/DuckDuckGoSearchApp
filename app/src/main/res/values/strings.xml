@@ -4,6 +4,7 @@
     <string name="search_hint">Search</string>
     <string name="search_bar_transition_name">search_bar</string>
     <string name="search_history">Search history</string>
+    <string name="search_history_min">History</string>
 
     <string name="add_widget">Add widget</string>
     <string name="settings">Settings</string>

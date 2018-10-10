@@ -52,4 +52,28 @@
         android:layout_margin="15dp"
         app:srcCompat="@drawable/ic_settings_24px" />
 
+    <LinearLayout
+        android:id="@+id/search_history_button"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_outline_keyboard_arrow_up_24px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_history_min"
+            android:textColor="#505050"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

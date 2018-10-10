@@ -73,6 +73,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
                     fragmentManager.beginTransaction()
                             .replace(R.id.frame_layout, webViewFragment)
                             .commit();
+                    HistoryManager.addTerm(latestTerm, "Today", SearchActivity.this);
                 }
                 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 return false;

@@ -10,17 +10,23 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.FragmentManager;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
 
     RelativeLayout searchField;
     Context context;
+    FragmentManager manager;
     ImageButton settingsButton;
     SharedPreferences preferences;
+    LinearLayout historyButton;
     boolean darkTheme = false;
 
     @Override
@@ -37,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             WebView.setWebContentsDebuggingEnabled(true);
         }
 
+        manager = getSupportFragmentManager();
         context = this;
 
         searchField = findViewById(R.id.search_field);
@@ -49,6 +56,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
                 startActivity(settingsIntent);
+            }
+        });
+
+        historyButton = findViewById(R.id.search_history_button);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialogFragment fragment = new HistoryFragment();
+                fragment.show(manager, fragment.getTag());
             }
         });
 

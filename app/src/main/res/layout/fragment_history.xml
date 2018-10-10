@@ -6,15 +6,18 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView"
+        android:id="@+id/history_fragment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         android:text="@string/search_history"
         android:textAllCaps="true"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:fontFamily="sans-serif-condensed" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_fragment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

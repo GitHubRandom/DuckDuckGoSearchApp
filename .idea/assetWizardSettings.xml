@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_outline_close_24px_white" />
-                            <entry key="sourceFile" value="C:\Users\MEYOMO\Documents\Android Development Resources\SVG Icons\outline-close-24px.svg" />
+                            <entry key="outputName" value="ic_outline_delete_forever_24px_white" />
+                            <entry key="sourceFile" value="C:\Users\MEYOMO\Documents\Android Development Resources\SVG Icons\outline-delete_forever-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

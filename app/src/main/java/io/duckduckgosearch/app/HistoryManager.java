@@ -13,34 +13,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class HistoryManager {
 
     private static final String FILENAME = "history.txt";
 
-    public static void addTerm(String term, Context context) {
-        ArrayList<String> storedHistory = getTermsAsArrayList(context);
-        Type baseType = new TypeToken<ArrayList<String>>() {}.getType();
+    public static void addTerm(String term, String date, Context context) {
+        ArrayList<HistoryItem> storedHistory = getTermsAsArrayList(context);
+        Type baseType = new TypeToken<ArrayList<HistoryItem>>() {}.getType();
         Gson gson = new Gson();
-        if (storedHistory != null) {
-            try {
-                storedHistory.add(term);
-                FileOutputStream outputStream = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                outputStream.write(gson.toJson(storedHistory, baseType).getBytes(Charset.forName("UTF-8")));
-                outputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (storedHistory == null) {
+            storedHistory = new ArrayList<>();
         }
+        try {
+            storedHistory.add(new HistoryItem(term, date));
+            FileOutputStream outputStream = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            outputStream.write(gson.toJson(storedHistory, baseType).getBytes(Charset.forName("UTF-8")));
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public static ArrayList<String> getTermsAsArrayList(Context context) {
-        ArrayList<String> result;
-        Type baseType = new TypeToken<ArrayList<String>>() {}.getType();
+    public static ArrayList<HistoryItem> getTermsAsArrayList(Context context) {
+        ArrayList<HistoryItem> result;
+        Type baseType = new TypeToken<ArrayList<HistoryItem>>() {}.getType();
         Gson gson = new Gson();
         try {
             FileInputStream stream = context.openFileInput(FILENAME);
