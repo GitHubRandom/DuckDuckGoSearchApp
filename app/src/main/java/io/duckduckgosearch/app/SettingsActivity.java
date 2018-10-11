@@ -1,6 +1,7 @@
 package io.duckduckgosearch.app;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -10,13 +11,10 @@ import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    SharedPreferences preferences;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getString("app_theme", "default").equals("dark")) {
+        if (ThemeChecker.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark);
         }
         getSupportFragmentManager().beginTransaction()
@@ -27,15 +25,13 @@ public class SettingsActivity extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
         androidx.preference.Preference preference;
-        SharedPreferences preferences;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.settings_screen);
-            preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             preference = findPreference("app_theme");
             preference.setIcon(R.drawable.ic_duckduckgo_logo);
-            switch (preferences.getString("app_theme", "default")) {
+            switch (ThemeChecker.getTheme(getContext())) {
                 case "default":
                     preference.setSummary("Default");
                     preference.setIcon(R.drawable.app_theme_drawable_default);

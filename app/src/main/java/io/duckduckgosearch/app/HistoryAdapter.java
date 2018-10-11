@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,6 +33,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.ViewHolder holder, int position) {
+        if (ThemeChecker.isDarkTheme(context)) {
+            holder.icon.setImageDrawable(
+                    context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
+            holder.deleteButton.setImageDrawable(
+                    context.getResources().getDrawable(R.drawable.ic_outline_delete_forever_24px_white));
+        }
         holder.term.setText(list.get(position).getTerm());
         holder.date.setText("Today");
     }
@@ -43,6 +51,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageButton deleteButton;
+        ImageView icon;
         TextView term, date;
 
         public ViewHolder(@NonNull View itemView) {
@@ -50,6 +59,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             deleteButton = itemView.findViewById(R.id.history_item_button);
             term = itemView.findViewById(R.id.history_item_term);
             date = itemView.findViewById(R.id.history_item_date);
+            icon = itemView.findViewById(R.id.history_item_icon);
         }
     }
 }

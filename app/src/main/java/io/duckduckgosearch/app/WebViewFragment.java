@@ -29,10 +29,9 @@ public class WebViewFragment extends Fragment {
     private static final String GRAY_COOKIE = "ae=g";
     private static final String DARK_COOKIE = "ae=d";
     String data = "";
-    WebView webView;
-    Context context;
-    SharedPreferences preferences;
-    OnSearchTermChange onSearchTermChange;
+    private WebView webView;
+    private Context context;
+    private OnSearchTermChange onSearchTermChange;
 
     public interface OnSearchTermChange {
         void onSearchTermChange(String searchTerm);
@@ -63,13 +62,12 @@ public class WebViewFragment extends Fragment {
         if (getArguments() != null) {
             data = getArguments().getString("data");
         }
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         webView = view.findViewById(R.id.search_web_view);
         webView.setVisibility(View.INVISIBLE);
         webView.getSettings().setJavaScriptEnabled(true);
         CookieManager.getInstance().removeAllCookie();
         CookieManager.getInstance().setCookie("duckduckgo.com", "o=-1");
-        switch (preferences.getString("app_theme", "default")) {
+        switch (ThemeChecker.getTheme(getContext())) {
             case "basic":
                 CookieManager.getInstance().setCookie("duckduckgo.com", BASIC_COOKIE);
                 break;

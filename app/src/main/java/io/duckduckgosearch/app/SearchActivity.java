@@ -1,9 +1,7 @@
 package io.duckduckgosearch.app;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,7 +23,6 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     Activity activity;
     ImageView duckLogo;
     ImageButton eraseTextButton;
-    SharedPreferences preferences;
     RelativeLayout searchBarRoot;
     String latestTerm = "";
     WebViewFragment webViewFragment;
@@ -34,12 +31,13 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getString("app_theme", "default").equals("dark")) {
+        if (ThemeChecker.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
             darkTheme = true;
         }
         setContentView(R.layout.activity_search);
+
+        Bundle bundle = getIntent().getExtras();
 
         eraseTextButton = findViewById(R.id.erase_button);
 

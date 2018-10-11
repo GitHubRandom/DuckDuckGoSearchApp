@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -25,15 +26,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     Context context;
     FragmentManager manager;
     ImageButton settingsButton;
-    SharedPreferences preferences;
     LinearLayout historyButton;
     boolean darkTheme = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getString("app_theme", "default").equals("dark")) {
+        if (ThemeChecker.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
             darkTheme = true;
         }
@@ -73,6 +72,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.home_root).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
             ((ImageView)findViewById(R.id.duck_logo)).setImageResource(R.drawable.ic_duckduckgo_white_logo);
             settingsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_24px_white));
+            ((TextView)findViewById(R.id.search_history_button_text)).setTextColor(
+                    getResources().getColor(android.R.color.white));
+            ((ImageView)findViewById(R.id.search_history_button_icon)).setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_outline_keyboard_arrow_up_24px_white));
         }
     }
 
