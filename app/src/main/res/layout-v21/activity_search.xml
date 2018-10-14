@@ -38,9 +38,13 @@
                 android:id="@+id/search_bar_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/erase_button"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint"
-                android:inputType="text" />
+                android:inputType="text"
+                android:singleLine="true" />
 
             <ImageButton
                 android:id="@+id/erase_button"
@@ -48,7 +52,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_outline_close_24px"
                 android:background="@android:color/transparent"
-                android:layout_alignEnd="@id/search_bar_edittext"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>

@@ -25,8 +25,10 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     ImageButton eraseTextButton;
     RelativeLayout searchBarRoot;
     String latestTerm = "";
+    String intentSearchTerm;
     WebViewFragment webViewFragment;
     boolean darkTheme;
+    boolean fromIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,43 +39,45 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         }
         setContentView(R.layout.activity_search);
 
-        Bundle bundle = getIntent().getExtras();
-
-        eraseTextButton = findViewById(R.id.erase_button);
-
-        if (darkTheme) {
-            findViewById(R.id.frame_layout).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
-            eraseTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_outline_close_24px_white));
-        }
-
         duckLogo = findViewById(R.id.duck_logo);
 
         fragmentManager = getSupportFragmentManager();
 
         activity = this;
 
-        progressBar = findViewById(R.id.search_progress);
-
         searchBarRoot = findViewById(R.id.search_bar_edittext_root);
 
+        progressBar = findViewById(R.id.search_progress);
+
         searchBar = findViewById(R.id.search_bar_edittext);
-        if (savedInstanceState == null) {
+        
+        eraseTextButton = findViewById(R.id.erase_button);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            if (bundle.containsKey("search_term")) {
+                intentSearchTerm = bundle.getString("search_term");
+                fromIntent = true;
+                search(intentSearchTerm);
+            }
+        }
+
+        if (darkTheme) {
+            findViewById(R.id.frame_layout).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+            eraseTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_outline_close_24px_white));
+        }
+
+        if (savedInstanceState == null && !fromIntent) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             searchBar.requestFocus();
         }
+
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (!v.getText().toString().equals("")) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    webViewFragment = WebViewFragment.newInstance(v.getText().toString());
-                    latestTerm = v.getText().toString();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.frame_layout, webViewFragment)
-                            .commit();
-                    HistoryManager.addTerm(latestTerm, "Today", SearchActivity.this);
+                    search(v.getText().toString());
                 }
-                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                 return false;
             }
         });
@@ -116,5 +120,19 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         } else {
             super.onBackPressed();
         }
+    }
+
+    void search(String searchTerm) {
+        progressBar.setVisibility(View.VISIBLE);
+        webViewFragment = WebViewFragment.newInstance(searchTerm);
+        latestTerm = searchTerm;
+        if (fromIntent) {
+            searchBar.setText(latestTerm);
+        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, webViewFragment)
+                .commit();
+        HistoryManager.addTerm(latestTerm, "Today", SearchActivity.this);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 }

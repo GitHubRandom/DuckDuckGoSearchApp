@@ -1,12 +1,14 @@
 package io.duckduckgosearch.app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -39,8 +41,19 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.deleteButton.setImageDrawable(
                     context.getResources().getDrawable(R.drawable.ic_outline_delete_forever_24px_white));
         }
+        final String searchTerm = list.get(position).getTerm();
         holder.term.setText(list.get(position).getTerm());
         holder.date.setText("Today");
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent searchIntent = new Intent(context, SearchActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("search_term", searchTerm);
+                searchIntent.putExtras(bundle);
+                context.startActivity(searchIntent);
+            }
+        });
     }
 
     @Override
@@ -53,6 +66,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         ImageButton deleteButton;
         ImageView icon;
         TextView term, date;
+        RelativeLayout root;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +74,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             term = itemView.findViewById(R.id.history_item_term);
             date = itemView.findViewById(R.id.history_item_date);
             icon = itemView.findViewById(R.id.history_item_icon);
+            root = itemView.findViewById(R.id.history_item_root);
         }
     }
 }
