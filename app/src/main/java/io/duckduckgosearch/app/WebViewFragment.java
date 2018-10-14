@@ -16,6 +16,7 @@ import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,6 +85,7 @@ public class WebViewFragment extends Fragment {
                 webView.loadUrl(
                         "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
                 );
+                HistoryManager.addTerm(data, Calendar.getInstance().getTime(), getContext());
                 webView.setVisibility(View.VISIBLE);
                 webView.requestFocus();
             }

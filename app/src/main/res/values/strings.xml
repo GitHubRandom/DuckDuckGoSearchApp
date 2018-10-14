@@ -7,6 +7,16 @@
     <string name="search_history_empty">No search history yet</string>
     <string name="search_history_min">History</string>
 
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="past_days">%d days ago</string>
+    <string name="last_week">Last week</string>
+    <string name="past_weeks">%d weeks ago</string>
+    <string name="last_month">Last month</string>
+    <string name="past_months">%d months ago</string>
+    <string name="last_year">Last year</string>
+    <string name="past_years">%d years ago</string>
+
     <string name="add_widget">Add widget</string>
     <string name="settings">Settings</string>
     <string name="title_activity_settings">Settings</string>

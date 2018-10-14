@@ -14,12 +14,13 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class HistoryManager {
 
     private static final String FILENAME = "history.txt";
 
-    public static void addTerm(String term, String date, Context context) {
+    public static void addTerm(String term, Date date, Context context) {
         ArrayList<HistoryItem> storedHistory = getTermsAsArrayList(context);
         Type baseType = new TypeToken<ArrayList<HistoryItem>>() {}.getType();
         Gson gson = new Gson();

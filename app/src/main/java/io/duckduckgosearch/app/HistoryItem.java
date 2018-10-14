@@ -1,10 +1,13 @@
 package io.duckduckgosearch.app;
 
+import java.util.Date;
+
 public class HistoryItem {
 
-    private String term, date;
+    private String term;
+    private Date date;
 
-    public HistoryItem(String term, String date) {
+    public HistoryItem(String term, Date date) {
         this.term = term;
         this.date = date;
     }
@@ -17,11 +20,11 @@ public class HistoryItem {
         this.term = term;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }
