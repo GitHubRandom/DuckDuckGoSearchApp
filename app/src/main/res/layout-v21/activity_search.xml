@@ -52,6 +52,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_outline_close_24px"
                 android:background="@android:color/transparent"
+                android:layout_marginStart="10dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true" />
 
