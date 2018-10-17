@@ -99,8 +99,13 @@ public class WebViewFragment extends Fragment {
                 } else {
                     onSearchTermChange = (OnSearchTermChange) context;
                     try {
-                        onSearchTermChange.onSearchTermChange(
-                                URLDecoder.decode(url.substring(url.indexOf("?q=") + 3, url.indexOf("&")), "UTF-8"));
+                        if (url.contains("&")) {
+                            onSearchTermChange.onSearchTermChange(
+                                    URLDecoder.decode(url.substring(url.indexOf("?q=") + 3, url.indexOf("&")), "UTF-8"));
+                        } else {
+                            onSearchTermChange.onSearchTermChange(
+                                    URLDecoder.decode(url.substring(url.indexOf("?q=") + 3), "UTF-8"));
+                        }
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }

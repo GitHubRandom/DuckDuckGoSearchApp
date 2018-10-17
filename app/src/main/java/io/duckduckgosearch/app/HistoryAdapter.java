@@ -25,7 +25,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public HistoryAdapter(Context context, ArrayList<HistoryItem> list) {
         this.context = context;
-        this.list = list;
+        if (list != null) {
+            this.list = list;
+        }
     }
 
     @NonNull
@@ -44,6 +46,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     context.getResources().getDrawable(R.drawable.ic_outline_delete_forever_24px_white));
         }
         final String searchTerm = list.get(position).getTerm();
+        final int termPosition = position;
         holder.term.setText(list.get(position).getTerm());
         holder.date.setText(calculatePastTime(list.get(position).getDate()));
         holder.root.setOnClickListener(new View.OnClickListener() {
@@ -56,11 +59,22 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 context.startActivity(searchIntent);
             }
         });
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HistoryManager.deleteTerm(termPosition, context);
+                list = HistoryManager.getTermsAsArrayList(context);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (list != null) {
+            return list.size();
+        }
+        return 0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

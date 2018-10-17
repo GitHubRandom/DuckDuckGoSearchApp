@@ -37,7 +37,6 @@ public class HistoryManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static ArrayList<HistoryItem> getTermsAsArrayList(Context context) {
@@ -61,6 +60,27 @@ public class HistoryManager {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void deleteTerm(int position, Context context) {
+        ArrayList<HistoryItem> storedHistory = getTermsAsArrayList(context);
+        Type baseType = new TypeToken<ArrayList<HistoryItem>>() {}.getType();
+        Gson gson = new Gson();
+        if (storedHistory == null) {
+            storedHistory = new ArrayList<>();
+        }
+        try {
+            storedHistory.remove(position);
+            FileOutputStream outputStream = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            outputStream.write(gson.toJson(storedHistory, baseType).getBytes(Charset.forName("UTF-8")));
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
     }
 
