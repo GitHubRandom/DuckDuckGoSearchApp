@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/search_field_bg">
 
-            <EditText
+            <AutoCompleteTextView
+                android:id="@+id/search_field_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"

@@ -39,7 +39,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.ViewHolder holder, int position) {
-        if (ThemeChecker.isDarkTheme(context)) {
+        if (PrefManager.isDarkTheme(context)) {
             holder.icon.setImageDrawable(
                     context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
             holder.deleteButton.setImageDrawable(

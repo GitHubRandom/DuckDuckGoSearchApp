@@ -3,10 +3,8 @@ package io.duckduckgosearch.app;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +28,7 @@ public class WebViewFragment extends Fragment {
     private static final String GRAY_COOKIE = "ae=g";
     private static final String DARK_COOKIE = "ae=d";
     String data = "";
+    private boolean addHistory = false;
     private WebView webView;
     private Context context;
     private OnSearchTermChange onSearchTermChange;
@@ -47,10 +46,11 @@ public class WebViewFragment extends Fragment {
         this.context = context;
     }
 
-    public static WebViewFragment newInstance(@NonNull String data) {
+    public static WebViewFragment newInstance(@NonNull String data, boolean addHistory) {
         WebViewFragment webViewFragment = new WebViewFragment();
         Bundle bundle = new Bundle();
         bundle.putString("data", data);
+        bundle.putBoolean("add_history", addHistory);
         webViewFragment.setArguments(bundle);
         return webViewFragment;
     }
@@ -62,13 +62,14 @@ public class WebViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_web_view, container, false);
         if (getArguments() != null) {
             data = getArguments().getString("data");
+            addHistory = getArguments().getBoolean("add_history");
         }
         webView = view.findViewById(R.id.search_web_view);
         webView.setVisibility(View.INVISIBLE);
         webView.getSettings().setJavaScriptEnabled(true);
         CookieManager.getInstance().removeAllCookie();
         CookieManager.getInstance().setCookie("duckduckgo.com", "o=-1");
-        switch (ThemeChecker.getTheme(getContext())) {
+        switch (PrefManager.getTheme(getContext())) {
             case "basic":
                 CookieManager.getInstance().setCookie("duckduckgo.com", BASIC_COOKIE);
                 break;
@@ -85,7 +86,9 @@ public class WebViewFragment extends Fragment {
                 webView.loadUrl(
                         "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
                 );
-                HistoryManager.addTerm(data, Calendar.getInstance().getTime(), getContext());
+                if (addHistory) {
+                    HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
+                }
                 webView.setVisibility(View.VISIBLE);
                 webView.requestFocus();
             }

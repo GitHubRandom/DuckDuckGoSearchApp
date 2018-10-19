@@ -34,16 +34,23 @@
             android:transitionName="@string/search_bar_transition_name"
             android:background="@drawable/search_field_bg">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/search_bar_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/erase_button"
+                android:dropDownWidth="match_parent"
+                android:dropDownAnchor="@id/search_bar_edittext_root"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint"
+                android:completionThreshold="1"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:imeOptions="actionDone"
                 android:inputType="text"
+                android:popupBackground="@android:color/transparent"
                 android:singleLine="true" />
 
             <ImageButton
@@ -59,7 +66,7 @@
         </RelativeLayout>
 
     </LinearLayout>
-    
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"

@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -17,7 +19,7 @@ import androidx.fragment.app.FragmentManager;
 
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange {
 
-    EditText searchBar;
+    AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
     ProgressBar progressBar;
     Activity activity;
@@ -33,7 +35,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ThemeChecker.isDarkTheme(this)) {
+        if (PrefManager.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
             darkTheme = true;
         }
@@ -50,7 +52,11 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         progressBar = findViewById(R.id.search_progress);
 
         searchBar = findViewById(R.id.search_bar_edittext);
-        
+        if (HistoryManager.getTermsAsStringArray(this) != null) {
+            AutoCompleteAdapter adapter = new AutoCompleteAdapter(
+                    this, R.layout.auto_complete_item, HistoryManager.getTermsAsStringArray(this));
+            searchBar.setAdapter(adapter);
+        }
         eraseTextButton = findViewById(R.id.erase_button);
 
         Bundle bundle = getIntent().getExtras();
@@ -68,15 +74,16 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         }
 
         if (savedInstanceState == null && !fromIntent) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             searchBar.requestFocus();
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
 
         searchBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (!v.getText().toString().equals("")) {
+                if (!v.getText().toString().equals("") && actionId == EditorInfo.IME_ACTION_DONE) {
                     search(v.getText().toString());
+                    return true;
                 }
                 return false;
             }
@@ -124,7 +131,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
     void search(String searchTerm) {
         progressBar.setVisibility(View.VISIBLE);
-        webViewFragment = WebViewFragment.newInstance(searchTerm);
+        webViewFragment = WebViewFragment.newInstance(searchTerm,
+                (PrefManager.isHistoryEnabled(this) && !searchTerm.equals(latestTerm)));
         latestTerm = searchTerm;
         if (fromIntent) {
             searchBar.setText(latestTerm);
@@ -132,6 +140,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, webViewFragment)
                 .commit();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        InputMethodManager manager = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
     }
 }

@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class HistoryManager {
@@ -63,9 +64,21 @@ public class HistoryManager {
         }
     }
 
+    public static String[] getTermsAsStringArray(Context context) {
+        ArrayList<HistoryItem> historyItems = getTermsAsArrayList(context);
+        if (historyItems != null && historyItems.size() != 0) {
+            ArrayList<String> historyTerms = new ArrayList<>();
+            for (int i = 0; i < historyItems.size(); i++) {
+                historyTerms.add(historyItems.get(i).getTerm());
+            }
+            return Arrays.copyOf(historyTerms.toArray(), historyItems.size(), String[].class);
+        }
+        return null;
+    }
+
     public static void deleteTerm(int position, Context context) {
         ArrayList<HistoryItem> storedHistory = getTermsAsArrayList(context);
-        Type baseType = new TypeToken<ArrayList<HistoryItem>>() {}.getType();
+        Type baseType = new TypeToken<ArrayList<HistoryItem>>(){}.getType();
         Gson gson = new Gson();
         if (storedHistory == null) {
             storedHistory = new ArrayList<>();

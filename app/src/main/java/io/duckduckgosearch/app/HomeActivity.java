@@ -30,7 +30,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ThemeChecker.isDarkTheme(this)) {
+        if (PrefManager.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
             darkTheme = true;
         }

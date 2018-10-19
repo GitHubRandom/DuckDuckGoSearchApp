@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.util.ArrayList;
-
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +37,7 @@ public class HistoryFragment extends BottomSheetDialogFragment {
         historyList.setLayoutManager(manager);
         historyList.setAdapter(adapter);
 
-        if (ThemeChecker.isDarkTheme(getContext())) {
+        if (PrefManager.isDarkTheme(getContext())) {
             root.setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
         }
 
