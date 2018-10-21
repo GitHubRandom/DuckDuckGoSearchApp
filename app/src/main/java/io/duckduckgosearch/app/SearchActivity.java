@@ -1,6 +1,7 @@
 package io.duckduckgosearch.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +30,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     String latestTerm = "";
     String intentSearchTerm;
     WebViewFragment webViewFragment;
+    AutoCompleteAdapter adapter;
     boolean darkTheme;
     boolean fromIntent;
 
@@ -53,7 +55,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
         searchBar = findViewById(R.id.search_bar_edittext);
         if (HistoryManager.getTermsAsStringArray(this) != null) {
-            AutoCompleteAdapter adapter = new AutoCompleteAdapter(
+            adapter = new AutoCompleteAdapter(
                     this, R.layout.auto_complete_item, HistoryManager.getTermsAsStringArray(this));
             searchBar.setAdapter(adapter);
         }
@@ -83,6 +85,9 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (!v.getText().toString().equals("") && actionId == EditorInfo.IME_ACTION_DONE) {
                     search(v.getText().toString());
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
                     return true;
                 }
                 return false;
@@ -131,8 +136,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
     void search(String searchTerm) {
         progressBar.setVisibility(View.VISIBLE);
-        webViewFragment = WebViewFragment.newInstance(searchTerm,
-                (PrefManager.isHistoryEnabled(this) && !searchTerm.equals(latestTerm)));
+        webViewFragment = WebViewFragment.newInstance(searchTerm, PrefManager.isHistoryEnabled(this));
         latestTerm = searchTerm;
         if (fromIntent) {
             searchBar.setText(latestTerm);
@@ -140,7 +144,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, webViewFragment)
                 .commit();
-        InputMethodManager manager = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
+        InputMethodManager manager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 }

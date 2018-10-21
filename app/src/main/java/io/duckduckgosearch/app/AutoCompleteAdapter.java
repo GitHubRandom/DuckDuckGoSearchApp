@@ -34,15 +34,13 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
             convertView = inflater.inflate(resId, parent, false);
         }
 
-        String item = data[position];
-
         ImageView icon = convertView.findViewById(R.id.auto_complete_item_icon);
         if (PrefManager.isDarkTheme(context)) {
             icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
         }
 
         TextView textItem = convertView.findViewById(R.id.auto_complete_item_text);
-        textItem.setText(item);
+        textItem.setText(getItem(position));
 
         return convertView;
     }

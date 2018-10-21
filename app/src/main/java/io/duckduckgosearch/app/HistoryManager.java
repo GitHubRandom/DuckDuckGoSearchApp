@@ -1,6 +1,7 @@
 package io.duckduckgosearch.app;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -22,6 +23,14 @@ public class HistoryManager {
     private static final String FILENAME = "history.txt";
 
     public static void addTerm(String term, Date date, Context context) {
+        ArrayList<String> stringHistoryArray = getTermsAsStringArrayList(context);
+        if (stringHistoryArray != null) {
+            if (stringHistoryArray.contains(term)) {
+                Log.i("DEBUG", "contains term");
+                deleteTerm(stringHistoryArray.lastIndexOf(term), context);
+            }
+        }
+
         ArrayList<HistoryItem> storedHistory = getTermsAsArrayList(context);
         Type baseType = new TypeToken<ArrayList<HistoryItem>>() {}.getType();
         Gson gson = new Gson();
@@ -64,14 +73,22 @@ public class HistoryManager {
         }
     }
 
-    public static String[] getTermsAsStringArray(Context context) {
+    public static ArrayList<String> getTermsAsStringArrayList(Context context) {
         ArrayList<HistoryItem> historyItems = getTermsAsArrayList(context);
         if (historyItems != null && historyItems.size() != 0) {
             ArrayList<String> historyTerms = new ArrayList<>();
             for (int i = 0; i < historyItems.size(); i++) {
                 historyTerms.add(historyItems.get(i).getTerm());
             }
-            return Arrays.copyOf(historyTerms.toArray(), historyItems.size(), String[].class);
+            return historyTerms;
+        }
+        return null;
+    }
+
+    public static String[] getTermsAsStringArray(Context context) {
+        ArrayList<String> historyItems = getTermsAsStringArrayList(context);
+        if (historyItems != null && historyItems.size() != 0) {
+            return Arrays.copyOf(historyItems.toArray(), historyItems.size(), String[].class);
         }
         return null;
     }
