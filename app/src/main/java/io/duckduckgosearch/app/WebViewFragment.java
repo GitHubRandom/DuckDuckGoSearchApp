@@ -90,7 +90,6 @@ public class WebViewFragment extends Fragment {
                     HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
                 }
                 webView.setVisibility(View.VISIBLE);
-                webView.requestFocus();
             }
 
             @Override

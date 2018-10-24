@@ -26,6 +26,8 @@ public class HistoryFragment extends BottomSheetDialogFragment {
             if (HistoryManager.getTermsAsArrayList(getContext()).isEmpty()) {
                 fragmentTitle.setText(R.string.search_history_empty);
             }
+        } else {
+            fragmentTitle.setText(R.string.search_history_empty);
         }
 
         adapter = new HistoryAdapter(getContext(), HistoryManager.getTermsAsArrayList(getContext()));
