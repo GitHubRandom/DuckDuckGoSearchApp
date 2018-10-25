@@ -2,10 +2,12 @@ package io.duckduckgosearch.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,11 +19,19 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
     private Context context;
     private int resId;
+    private AutoCompleteTextView searchBar;
+    OnItemClickListener clickListener;
 
-    public AutoCompleteAdapter(@NonNull Context context, int resource, @NonNull String[] objects) {
+    public interface OnItemClickListener {
+        void onItemClickListener(String searchTerm);
+    }
+
+    public AutoCompleteAdapter(@NonNull Context context, int resource,
+                               @NonNull String[] objects, AutoCompleteTextView searchBar) {
         super(context, resource, objects);
         this.context = context;
         resId = resource;
+        this.searchBar = searchBar;
     }
 
     @NonNull
@@ -33,7 +43,21 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
             convertView = inflater.inflate(resId, parent, false);
         }
 
+        final int pos = position;
+
         RelativeLayout root = convertView.findViewById(R.id.auto_complete_item_root);
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    clickListener = (OnItemClickListener) context;
+                    clickListener.onItemClickListener(getItem(pos));
+                    searchBar.setText(getItem(pos));
+                } catch (ClassCastException e) {
+                    Log.e("AutoCompleteAdapter", "You must implement the clickListenerInterface");
+                }
+            }
+        });
         ImageView icon = convertView.findViewById(R.id.auto_complete_item_icon);
         if (PrefManager.isDarkTheme(context)) {
             icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));

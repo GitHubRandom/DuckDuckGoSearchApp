@@ -19,7 +19,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange {
+public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
+        AutoCompleteAdapter.OnItemClickListener {
 
     AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
@@ -59,8 +60,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
         searchBar = findViewById(R.id.search_bar_edittext);
         if (HistoryManager.getTermsAsStringArray(this) != null) {
-            adapter = new AutoCompleteAdapter(
-                    this, R.layout.auto_complete_item, HistoryManager.getTermsAsStringArray(this));
+            adapter = new AutoCompleteAdapter(this, R.layout.auto_complete_item,
+                    HistoryManager.getTermsAsStringArray(this), searchBar);
             searchBar.setAdapter(adapter);
         }
         eraseTextButton = findViewById(R.id.erase_button);
@@ -75,13 +76,13 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         }
 
         if (darkTheme) {
-            findViewById(R.id.frame_layout).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+            findViewById(R.id.frame_layout).setBackgroundColor(
+                    getResources().getColor(R.color.darkThemeColorPrimary));
             eraseTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_outline_close_24px_white));
         }
 
         if (savedInstanceState == null && !fromIntent) {
             searchBar.requestFocus();
-            searchBar.showDropDown();
         } else {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             if (!searchBar.hasFocus()) {
@@ -124,7 +125,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
         if (darkTheme) {
             duckLogo.setImageResource(R.drawable.ic_duckduckgo_white_logo);
-            findViewById(R.id.search_bar_root).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+            findViewById(R.id.search_bar_root).setBackgroundColor(
+                    getResources().getColor(R.color.darkThemeColorPrimary));
             searchBarRoot.setBackground(getResources().getDrawable(R.drawable.search_field_bg_dark));
         }
     }
@@ -158,4 +160,11 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         searchBar.clearFocus();
         manager.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
     }
+
+    @Override
+    public void onItemClickListener(String searchTerm) {
+        search(searchTerm);
+    }
+
+
 }
