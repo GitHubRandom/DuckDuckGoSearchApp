@@ -81,6 +81,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
         if (savedInstanceState == null && !fromIntent) {
             searchBar.requestFocus();
+            searchBar.showDropDown();
         } else {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             if (!searchBar.hasFocus()) {
