@@ -70,6 +70,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
         });
         ImageView icon = convertView.findViewById(R.id.auto_complete_item_icon);
         if (PrefManager.isDarkTheme(context)) {
+            appendButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_top_left_arrow_white));
             icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
             root.setBackgroundColor(context.getResources().getColor(R.color.darkThemeColorPrimary));
         }
