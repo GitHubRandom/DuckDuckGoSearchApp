@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +45,15 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
         }
 
         final int pos = position;
+
+        ImageButton appendButton = convertView.findViewById(R.id.auto_complete_item_button);
+        appendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchBar.setText("");
+                searchBar.append(getItem(pos) + " ");
+            }
+        });
 
         RelativeLayout root = convertView.findViewById(R.id.auto_complete_item_root);
         root.setOnClickListener(new View.OnClickListener() {
