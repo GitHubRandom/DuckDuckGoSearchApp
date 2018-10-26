@@ -36,6 +36,8 @@
     </string-array>
     <string name="settings_search_history_title">Search history</string>
     <string name="settings_search_history_summary">Choose to enable search history or not</string>
-
+    <string name="settings_delete_search_history_title">Delete search history</string>
+    <string name="settings_delete_search_history_success">Successfully deleted</string>
+    <string name="settings_delete_search_history_already_done">Already deleted history</string>
 
 </resources>

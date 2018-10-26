@@ -114,4 +114,8 @@ public class HistoryManager {
         }
     }
 
+    public static boolean deleteSearchHistory(Context context) {
+        return context.deleteFile(FILENAME);
+    }
+
 }
