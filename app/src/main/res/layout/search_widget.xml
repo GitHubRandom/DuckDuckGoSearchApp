@@ -1,15 +1,17 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:id="@+id/search_widget_root">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="48dp"
         android:background="@drawable/search_widget_bg"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="7dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"/>
 
-</FrameLayout>
+</LinearLayout>
