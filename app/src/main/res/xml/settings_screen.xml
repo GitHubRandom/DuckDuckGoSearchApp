@@ -18,4 +18,8 @@
         android:title="@string/settings_delete_search_history_title"
         android:key="delete_search_history" />
 
+    <androidx.preference.Preference
+        android:title="@string/settings_about"
+        android:key="about_app"/>
+
 </androidx.preference.PreferenceScreen>

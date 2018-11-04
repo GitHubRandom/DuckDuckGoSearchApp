@@ -1,11 +1,13 @@
 package io.duckduckgosearch.app;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -79,16 +81,33 @@ public class SettingsActivity extends AppCompatActivity {
             deleteHistoryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    boolean delete = HistoryManager.deleteSearchHistory(getContext());
-                    if (delete) {
-                        Toast.makeText(getContext(),
-                                getResources().getString(R.string.settings_delete_search_history_success),
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(),
-                                getResources().getString(R.string.settings_delete_search_history_already_done),
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                    dialog.setTitle(getContext().getResources().getString(R.string.settings_delete_search_history_dialog_title));
+                    dialog.setMessage(getContext().getResources().getString(R.string.settings_delete_search_history_dialog_message));
+                    dialog.setPositiveButton(R.string.settings_delete_search_history_dialog_positive_btn,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    boolean delete = HistoryManager.deleteSearchHistory(getContext());
+                                    if (delete) {
+                                        Toast.makeText(getContext(),
+                                                getResources().getString(R.string.settings_delete_search_history_success),
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(),
+                                                getResources().getString(R.string.settings_delete_search_history_already_done),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                    });
+                    dialog.setNegativeButton(R.string.settings_delete_search_history_dialog_negative_btn,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    dialog.show();
                     return true;
                 }
             });

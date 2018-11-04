@@ -39,5 +39,10 @@
     <string name="settings_delete_search_history_title">Delete search history</string>
     <string name="settings_delete_search_history_success">Successfully deleted</string>
     <string name="settings_delete_search_history_already_done">Already deleted history</string>
+    <string name="settings_delete_search_history_dialog_title">Are you sure ?</string>
+    <string name="settings_delete_search_history_dialog_message">Your history will be deleted. This action cannot be undone</string>
+    <string name="settings_delete_search_history_dialog_positive_btn">Yes</string>
+    <string name="settings_delete_search_history_dialog_negative_btn">Cancel</string>
+    <string name="settings_about">About</string>
 
 </resources>
