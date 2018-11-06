@@ -4,7 +4,7 @@
     android:id="@+id/search_history_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
+    android:background="@drawable/history_fragment_bg"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -14,6 +14,7 @@
         android:textAlignment="center"
         android:layout_margin="10dp"
         android:text="@string/search_history"
+        android:textColor="@color/colorAccent"
         android:textAllCaps="true"
         android:textStyle="bold"
         app:fontFamily="sans-serif-condensed" />

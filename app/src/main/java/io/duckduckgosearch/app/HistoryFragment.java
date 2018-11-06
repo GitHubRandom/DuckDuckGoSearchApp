@@ -40,9 +40,14 @@ public class HistoryFragment extends BottomSheetDialogFragment {
         historyList.setAdapter(adapter);
 
         if (PrefManager.isDarkTheme(getContext())) {
-            root.setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+            root.setBackground(getResources().getDrawable(R.drawable.history_fragment_bg_dark));
+            fragmentTitle.setTextColor(getResources().getColor(R.color.darkThemeColorAccent));
         }
 
         dialog.setContentView(view);
+
+        ((View) view.getParent()).setBackground(null);
     }
+
+
 }

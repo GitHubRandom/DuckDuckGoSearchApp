@@ -63,12 +63,13 @@
         android:padding="10dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/search_history_button_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="-5dp"
             app:srcCompat="@drawable/ic_outline_keyboard_arrow_up_24px" />
 
         <TextView
