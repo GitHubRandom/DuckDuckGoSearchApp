@@ -4,11 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -27,13 +26,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
-        androidx.preference.Preference themePreference;
-        androidx.preference.Preference deleteHistoryPreference;
+        ListPreference themePreference;
+        Preference deleteHistoryPreference;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.settings_screen);
-            themePreference = findPreference("app_theme");
+            themePreference = (ListPreference) findPreference("app_theme");
             switch (PrefManager.getTheme(getContext())) {
                 case "default":
                     themePreference.setSummary("Default");
