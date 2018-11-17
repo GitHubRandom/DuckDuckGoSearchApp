@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryFragment extends BottomSheetDialogFragment {
 
-    HistoryAdapter adapter;
+    private HistoryAdapter adapter;
 
     @Override
     public void setupDialog(Dialog dialog, int style) {
@@ -41,7 +41,7 @@ public class HistoryFragment extends BottomSheetDialogFragment {
 
         if (PrefManager.isDarkTheme(getContext())) {
             root.setBackground(getResources().getDrawable(R.drawable.history_fragment_bg_dark));
-            fragmentTitle.setTextColor(getResources().getColor(R.color.darkThemeColorAccent));
+            fragmentTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
         dialog.setContentView(view);

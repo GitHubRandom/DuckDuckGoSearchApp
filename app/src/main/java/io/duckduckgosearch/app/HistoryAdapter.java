@@ -99,42 +99,38 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         currentCalendar.setTime(Calendar.getInstance().getTime());
         int year = currentCalendar.get(Calendar.YEAR);
         int month = currentCalendar.get(Calendar.MONTH);
-        int week = currentCalendar.get(Calendar.WEEK_OF_MONTH);
-        int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
+        int week = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+        int day = currentCalendar.get(Calendar.DAY_OF_YEAR);
 
         Calendar calendarToCompare = Calendar.getInstance();
         calendarToCompare.setTime(date);
         int yearToCompare = calendarToCompare.get(Calendar.YEAR);
         int monthToCompare = calendarToCompare.get(Calendar.MONTH);
-        int weekToCompare = calendarToCompare.get(Calendar.WEEK_OF_MONTH);
-        int dayToCompare = calendarToCompare.get(Calendar.DAY_OF_MONTH);
+        int weekToCompare = calendarToCompare.get(Calendar.WEEK_OF_YEAR);
+        int dayToCompare = calendarToCompare.get(Calendar.DAY_OF_YEAR);
 
-        if (yearToCompare == year) {
-            if (monthToCompare == month) {
-                if (weekToCompare == week) {
-                    int diff = day - dayToCompare;
-                    if (diff == 0) {
-                        return context.getResources().getString(R.string.today);
-                    } else if (diff == 1) {
-                        return context.getResources().getString(R.string.yesterday);
-                    } else {
-                        return context.getResources().getString(R.string.past_days, diff);
-                    }
-                } else {
-                    int diff = week - weekToCompare;
-                    if (diff == 1) {
-                        return context.getResources().getString(R.string.last_week);
-                    } else {
-                        return context.getResources().getString(R.string.past_weeks, diff);
-                    }
-                }
+        if (dayToCompare == day) {
+            return context.getResources().getString(R.string.today);
+        } else if (weekToCompare == week) {
+            int diff = day - dayToCompare;
+            if (diff == 1) {
+                return context.getResources().getString(R.string.yesterday);
             } else {
-                int diff = month - monthToCompare;
-                if (diff == 1) {
-                    return context.getResources().getString(R.string.last_month);
-                } else {
-                    return context.getResources().getString(R.string.past_months, diff);
-                }
+                return context.getResources().getString(R.string.past_days, diff);
+            }
+        } else if (monthToCompare == month) {
+            int diff = week - weekToCompare;
+            if (diff == 1) {
+                return context.getResources().getString(R.string.last_week);
+            } else {
+                return context.getResources().getString(R.string.past_weeks, diff);
+            }
+        } else if (yearToCompare == year) {
+            int diff = month - monthToCompare;
+            if (diff == 1) {
+                return context.getResources().getString(R.string.last_month);
+            } else {
+                return context.getResources().getString(R.string.past_months, diff);
             }
         } else {
             int diff = year - yearToCompare;
