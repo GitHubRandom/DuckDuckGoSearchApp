@@ -4,16 +4,23 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.Calendar;
 
 import androidx.annotation.NonNull;
@@ -80,42 +87,86 @@ public class WebViewFragment extends Fragment {
                 CookieManager.getInstance().setCookie("duckduckgo.com", DARK_COOKIE);
                 break;
         }
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                webView.loadUrl(
-                        "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
-                );
-                if (addHistory) {
-                    HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
-                }
-                webView.setVisibility(View.VISIBLE);
-            }
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (!url.contains("duckduckgo.com/?q=")) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(browserIntent);
-                    return true;
-                } else {
-                    onSearchTermChange = (OnSearchTermChange) context;
-                    try {
-                        if (url.contains("&")) {
-                            onSearchTermChange.onSearchTermChange(
-                                    URLDecoder.decode(url.substring(url.indexOf("?q=") + 3, url.indexOf("&")), "UTF-8"));
-                        } else {
-                            onSearchTermChange.onSearchTermChange(
-                                    URLDecoder.decode(url.substring(url.indexOf("?q=") + 3), "UTF-8"));
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    webView.loadUrl(
+                            "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
+                    );
+                    if (addHistory) {
+                        HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
                     }
+                    webView.setVisibility(View.VISIBLE);
                 }
-                return false;
-            }
-        });
-        webView.loadUrl(SEARCH_URL + data);
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    String url = request.getUrl().toString();
+                    if (!url.contains("duckduckgo.com/?q=")) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browserIntent);
+                        return true;
+                    } else {
+                        onSearchTermChange = (OnSearchTermChange) context;
+                        try {
+                            if (url.contains("&")) {
+                                onSearchTermChange.onSearchTermChange(
+                                        URLDecoder.decode(url.substring(url.indexOf("?q=") + 3, url.indexOf("&")), "UTF-8"));
+                            } else {
+                                onSearchTermChange.onSearchTermChange(
+                                        URLDecoder.decode(url.substring(url.indexOf("?q=") + 3), "UTF-8"));
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return false;
+                }
+            });
+        } else {
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    webView.loadUrl(
+                            "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
+                    );
+                    if (addHistory) {
+                        HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
+                    }
+                    webView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if (!url.contains("duckduckgo.com/?q=")) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(browserIntent);
+                        return true;
+                    } else {
+                        onSearchTermChange = (OnSearchTermChange) context;
+                        try {
+                            if (url.contains("&")) {
+                                onSearchTermChange.onSearchTermChange(
+                                        URLDecoder.decode(url.substring(url.indexOf("?q=") + 3, url.indexOf("&")), "UTF-8"));
+                            } else {
+                                onSearchTermChange.onSearchTermChange(
+                                        URLDecoder.decode(url.substring(url.indexOf("?q=") + 3), "UTF-8"));
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
+        try {
+            webView.loadUrl(SEARCH_URL + URLEncoder.encode(data, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
