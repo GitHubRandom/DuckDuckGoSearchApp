@@ -16,11 +16,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.util.Calendar;
 
 import androidx.annotation.NonNull;
@@ -39,9 +36,14 @@ public class WebViewFragment extends Fragment {
     private WebView webView;
     private Context context;
     private OnSearchTermChange onSearchTermChange;
+    private OnWebViewError onWebViewError;
 
     public interface OnSearchTermChange {
         void onSearchTermChange(String searchTerm);
+    }
+
+    public interface OnWebViewError {
+        void onWebViewError(int errorDescription);
     }
 
     public WebViewFragment() {
@@ -90,6 +92,12 @@ public class WebViewFragment extends Fragment {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    onWebViewError = (OnWebViewError) context;
+                    onWebViewError.onWebViewError(error.getErrorCode());
+                }
+
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     webView.loadUrl(

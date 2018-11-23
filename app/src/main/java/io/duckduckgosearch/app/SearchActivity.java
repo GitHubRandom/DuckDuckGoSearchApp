@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
-        AutoCompleteAdapter.OnItemClickListener {
+        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick {
 
     AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
@@ -167,4 +167,15 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     }
 
 
+    @Override
+    public void onWebViewError(int errorDescription) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, new ErrorFragment())
+                .commit();
+    }
+
+    @Override
+    public void onReloadButtonClick() {
+        search(latestTerm);
+    }
 }

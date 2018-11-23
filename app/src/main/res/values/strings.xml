@@ -7,6 +7,9 @@
     <string name="search_history_empty">No search history yet</string>
     <string name="search_history_min">History</string>
 
+    <string name="internet_error">Check your internet connection</string>
+    <string name="internet_error_retry_button">Reload</string>
+
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="past_days">%d days ago</string>
