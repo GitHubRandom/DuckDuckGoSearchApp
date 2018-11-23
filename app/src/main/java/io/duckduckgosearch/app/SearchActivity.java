@@ -169,6 +169,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
     @Override
     public void onWebViewError(int errorDescription) {
+        progressBar.setVisibility(View.GONE);
         fragmentManager.beginTransaction()
                 .replace(R.id.frame_layout, new ErrorFragment())
                 .commit();
