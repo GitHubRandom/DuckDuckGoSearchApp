@@ -42,7 +42,7 @@ public class ErrorFragment extends Fragment {
 
         if (PrefManager.isDarkTheme(getContext())) {
             ((TextView) view.findViewById(R.id.error_text)).setTextColor(getResources().getColor(android.R.color.white));
-            reload.setTextColor(getResources().getColor(android.R.color.white));
+            reload.setTextColor(getResources().getColor(R.color.darkThemeColorAccent));
             reload.setBackground(getResources().getDrawable(R.drawable.retry_button_bg_white));
         }
 

@@ -1,17 +1,17 @@
 package io.duckduckgosearch.app;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -108,8 +108,15 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     duckLogo.setVisibility(View.GONE);
+                    if (getResources().getBoolean(R.bool.isTabletAndLandscape)) {
+                        searchBarRoot.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT));
+                    }
                 } else {
                     duckLogo.setVisibility(View.VISIBLE);
+                    if (getResources().getBoolean(R.bool.isTabletAndLandscape)) {
+                        searchBarRoot.setLayoutParams(new LinearLayout.LayoutParams(550, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    }
                 }
             }
         });
