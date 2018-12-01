@@ -19,7 +19,7 @@ public class PrefManager {
     }
 
     public static boolean isHistoryEnabled(Context context) {
-        return getPreferences(context).getBoolean("search_history", false);
+        return getPreferences(context).getBoolean("search_history", true);
     }
 
 }

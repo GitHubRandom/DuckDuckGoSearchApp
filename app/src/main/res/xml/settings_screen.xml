@@ -12,7 +12,8 @@
     <androidx.preference.SwitchPreference
         android:title="@string/settings_search_history_title"
         android:summary="@string/settings_search_history_summary"
-        android:key="search_history" />
+        android:key="search_history"
+        android:defaultValue="true"/>
 
     <androidx.preference.Preference
         android:title="@string/settings_delete_search_history_title"
