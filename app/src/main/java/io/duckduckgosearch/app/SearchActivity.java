@@ -84,7 +84,6 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         if (savedInstanceState == null && !fromIntent) {
             searchBar.requestFocus();
         } else {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             if (!searchBar.hasFocus()) {
                 duckLogo.setVisibility(View.VISIBLE);
             }
@@ -166,6 +165,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
                 .commit();
         searchBar.clearFocus();
         manager.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
