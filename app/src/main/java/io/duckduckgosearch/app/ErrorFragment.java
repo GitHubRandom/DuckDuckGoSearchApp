@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,13 @@ public class ErrorFragment extends Fragment {
                 reloadButtonClick.onReloadButtonClick();
             }
         });
+
+        if (PrefManager.isDarkTheme(getContext())) {
+            ((TextView) view.findViewById(R.id.error_text)).setTextColor(getResources().getColor(android.R.color.white));
+            reload.setTextColor(getResources().getColor(android.R.color.white));
+            reload.setBackground(getResources().getDrawable(R.drawable.retry_button_bg_white));
+        }
+
         return view;
     }
 }
