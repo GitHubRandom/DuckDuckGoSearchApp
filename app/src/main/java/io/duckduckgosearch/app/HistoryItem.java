@@ -2,29 +2,32 @@ package io.duckduckgosearch.app;
 
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class HistoryItem {
 
-    private String term;
-    private Date date;
+    @PrimaryKey
+    @NonNull
+    public String searchTerm;
 
-    public HistoryItem(String term, Date date) {
-        this.term = term;
-        this.date = date;
+    @ColumnInfo(name = "search_date")
+    public Date searchDate;
+
+    public String getSearchTerm() {
+        return searchTerm;
     }
 
-    public String getTerm() {
-        return term;
+    public Date getSearchDate() {
+        return searchDate;
     }
 
-    public void setTerm(String term) {
-        this.term = term;
+    public HistoryItem(@NonNull String searchTerm, Date searchDate) {
+        this.searchTerm = searchTerm;
+        this.searchDate = searchDate;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
 }

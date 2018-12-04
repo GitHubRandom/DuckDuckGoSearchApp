@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.Calendar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 
 public class WebViewFragment extends Fragment {
@@ -37,6 +39,7 @@ public class WebViewFragment extends Fragment {
     private Context context;
     private OnSearchTermChange onSearchTermChange;
     private OnWebViewError onWebViewError;
+    private HistoryDatabase historyDatabase;
 
     public interface OnSearchTermChange {
         void onSearchTermChange(String searchTerm);
@@ -69,6 +72,8 @@ public class WebViewFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web_view, container, false);
+        historyDatabase = Room.databaseBuilder(getContext(), HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
+                .build();
         if (getArguments() != null) {
             data = getArguments().getString("data");
             addHistory = getArguments().getBoolean("add_history");
@@ -104,7 +109,13 @@ public class WebViewFragment extends Fragment {
                             "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
                     );
                     if (addHistory) {
-                        HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
+                                Log.i("History", "Add term success");
+                            }
+                        }).start();
                     }
                     webView.setVisibility(View.VISIBLE);
                 }
@@ -141,7 +152,12 @@ public class WebViewFragment extends Fragment {
                             "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
                     );
                     if (addHistory) {
-                        HistoryManager.addTerm(data, Calendar.getInstance().getTime(), context);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
+                            }
+                        }).start();
                     }
                     webView.setVisibility(View.VISIBLE);
                 }

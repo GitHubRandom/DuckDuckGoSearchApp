@@ -1,5 +1,6 @@
 package io.duckduckgosearch.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,17 +18,20 @@ import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     Context context;
     ArrayList<HistoryItem> list;
+    HistoryDatabase historyDatabase;
 
     public HistoryAdapter(Context context, ArrayList<HistoryItem> list) {
         this.context = context;
         if (list != null) {
             this.list = list;
         }
+        historyDatabase = Room.databaseBuilder(context, HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME).build();
     }
 
     @NonNull
@@ -45,10 +49,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.deleteButton.setImageDrawable(
                     context.getResources().getDrawable(R.drawable.ic_outline_delete_forever_24px_white));
         }
-        final String searchTerm = list.get(position).getTerm();
+        final String searchTerm = list.get(position).getSearchTerm();
         final int termPosition = position;
-        holder.term.setText(list.get(position).getTerm());
-        holder.date.setText(calculatePastTime(list.get(position).getDate()));
+        holder.term.setText(list.get(position).getSearchTerm());
+        holder.date.setText(calculatePastTime(list.get(position).getSearchDate()));
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,9 +66,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HistoryManager.deleteTerm(termPosition, context);
-                list = HistoryManager.getTermsAsArrayList(context);
-                notifyDataSetChanged();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        historyDatabase.historyDao().delete(list.get(termPosition));
+                        list = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
+                        ((Activity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyItemRemoved(termPosition);
+                                notifyItemRangeChanged(termPosition, getItemCount());
+                            }
+                        });
+                    }
+                }).start();
             }
         });
     }

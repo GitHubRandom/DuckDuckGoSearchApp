@@ -87,16 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    boolean delete = HistoryManager.deleteSearchHistory(getContext());
-                                    if (delete) {
-                                        Toast.makeText(getContext(),
-                                                getResources().getString(R.string.settings_delete_search_history_success),
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(),
-                                                getResources().getString(R.string.settings_delete_search_history_already_done),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+                                    //TODO: Delete all history database values
                                 }
                     });
                     dialog.setNegativeButton(R.string.settings_delete_search_history_dialog_negative_btn,

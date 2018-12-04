@@ -59,11 +59,11 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         progressBar = findViewById(R.id.search_progress);
 
         searchBar = findViewById(R.id.search_bar_edittext);
-        if (HistoryManager.getTermsAsStringArray(this) != null) {
+        /*if (HistoryManager.getTermsAsStringArray(this) != null) {
             adapter = new AutoCompleteAdapter(this, R.layout.auto_complete_item,
                     HistoryManager.getTermsAsStringArray(this), searchBar);
             searchBar.setAdapter(adapter);
-        }
+        }*/
         eraseTextButton = findViewById(R.id.erase_button);
 
         Bundle bundle = getIntent().getExtras();
