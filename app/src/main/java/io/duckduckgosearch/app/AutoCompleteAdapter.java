@@ -16,12 +16,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+@SuppressWarnings("NullableProblems")
 public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
     private Context context;
     private int resId;
     private AutoCompleteTextView searchBar;
-    OnItemClickListener clickListener;
+    private OnItemClickListener clickListener;
 
     public interface OnItemClickListener {
         void onItemClickListener(String searchTerm);

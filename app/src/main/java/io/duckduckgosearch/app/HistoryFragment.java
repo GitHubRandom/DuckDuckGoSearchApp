@@ -16,7 +16,7 @@ import androidx.room.Room;
 
 public class HistoryFragment extends BottomSheetDialogFragment {
 
-    public static final String HISTORY_DB_NAME = "history_db";
+    static final String HISTORY_DB_NAME = "history_db";
 
     private HistoryAdapter adapter;
     private HistoryDatabase historyDatabase;
@@ -29,7 +29,7 @@ public class HistoryFragment extends BottomSheetDialogFragment {
         historyDatabase = Room.databaseBuilder(getContext(), HistoryDatabase.class, HISTORY_DB_NAME).build();
 
         LinearLayout root = view.findViewById(R.id.search_history_root);
-        TextView fragmentTitle = view.findViewById(R.id.history_fragment_title);
+        final TextView fragmentTitle = view.findViewById(R.id.history_fragment_title);
         final RecyclerView historyListRv = view.findViewById(R.id.history_fragment_list);
         historyListRv.setHasFixedSize(true);
 
@@ -37,6 +37,9 @@ public class HistoryFragment extends BottomSheetDialogFragment {
             @Override
             public void run() {
                 historyList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
+                if (historyList.size() == 0) {
+                    fragmentTitle.setText(R.string.search_history_empty);
+                }
                 adapter = new HistoryAdapter(getContext(), historyList);
                 historyListRv.setAdapter(adapter);
             }

@@ -22,11 +22,11 @@ import androidx.room.Room;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    Context context;
-    ArrayList<HistoryItem> list;
-    HistoryDatabase historyDatabase;
+    private Context context;
+    private ArrayList<HistoryItem> list;
+    private HistoryDatabase historyDatabase;
 
-    public HistoryAdapter(Context context, ArrayList<HistoryItem> list) {
+    HistoryAdapter(Context context, ArrayList<HistoryItem> list) {
         this.context = context;
         if (list != null) {
             this.list = list;
@@ -99,7 +99,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         TextView term, date;
         RelativeLayout root;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             deleteButton = itemView.findViewById(R.id.history_item_button);
             term = itemView.findViewById(R.id.history_item_term);
@@ -109,7 +109,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
     }
 
-    String calculatePastTime(Date date) {
+    private String calculatePastTime(Date date) {
         Calendar currentCalendar = Calendar.getInstance();
         currentCalendar.setTime(Calendar.getInstance().getTime());
         int year = currentCalendar.get(Calendar.YEAR);

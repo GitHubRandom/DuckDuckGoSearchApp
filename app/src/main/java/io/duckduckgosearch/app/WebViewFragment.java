@@ -58,7 +58,7 @@ public class WebViewFragment extends Fragment {
         this.context = context;
     }
 
-    public static WebViewFragment newInstance(@NonNull String data, boolean addHistory) {
+    static WebViewFragment newInstance(@NonNull String data, boolean addHistory) {
         WebViewFragment webViewFragment = new WebViewFragment();
         Bundle bundle = new Bundle();
         bundle.putString("data", data);

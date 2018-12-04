@@ -12,20 +12,20 @@ public class HistoryItem {
 
     @PrimaryKey
     @NonNull
-    public String searchTerm;
+    String searchTerm;
 
     @ColumnInfo(name = "search_date")
-    public Date searchDate;
+    Date searchDate;
 
-    public String getSearchTerm() {
+    String getSearchTerm() {
         return searchTerm;
     }
 
-    public Date getSearchDate() {
+    Date getSearchDate() {
         return searchDate;
     }
 
-    public HistoryItem(@NonNull String searchTerm, Date searchDate) {
+    HistoryItem(@NonNull String searchTerm, Date searchDate) {
         this.searchTerm = searchTerm;
         this.searchDate = searchDate;
     }
