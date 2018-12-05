@@ -48,5 +48,7 @@
     <string name="settings_delete_search_history_dialog_negative_btn">Cancel</string>
     <string name="settings_about">About</string>
     <string name="settings_about_version">Version: %s</string>
+    <string name="settings_about_disclaimer">Disclaimer :</string>
+    <string name="settings_about_disclaimer_message">This is an UNOFFICIAL client for DuckDuckGo Search Engine and has no relation with DuckDuckGo company.</string>
 
 </resources>

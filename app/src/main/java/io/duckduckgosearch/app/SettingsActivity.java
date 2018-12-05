@@ -1,6 +1,7 @@
 package io.duckduckgosearch.app;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         ListPreference themePreference;
         Preference deleteHistoryPreference;
+        Preference aboutPreference;
         HistoryDatabase historyDatabase;
 
         @Override
@@ -35,6 +37,9 @@ public class SettingsActivity extends AppCompatActivity {
             addPreferencesFromResource(R.xml.settings_screen);
             historyDatabase = Room.databaseBuilder(getContext(), HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
                     .build();
+            aboutPreference = findPreference("about_app");
+            aboutPreference.setIntent(new Intent(getActivity(), AboutActivity.class));
+
             themePreference = (ListPreference) findPreference("app_theme");
             switch (PrefManager.getTheme(getContext())) {
                 case "default":
