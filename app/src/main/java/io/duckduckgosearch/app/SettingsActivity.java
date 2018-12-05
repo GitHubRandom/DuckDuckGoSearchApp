@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.room.Room;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -27,10 +28,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         ListPreference themePreference;
         Preference deleteHistoryPreference;
+        HistoryDatabase historyDatabase;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.settings_screen);
+            historyDatabase = Room.databaseBuilder(getContext(), HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
+                    .build();
             themePreference = (ListPreference) findPreference("app_theme");
             switch (PrefManager.getTheme(getContext())) {
                 case "default":
@@ -86,7 +90,12 @@ public class SettingsActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //TODO: Delete all history database values
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            historyDatabase.clearAllTables();
+                                        }
+                                    }).start();
                                 }
                     });
                     dialog.setNegativeButton(R.string.settings_delete_search_history_dialog_negative_btn,

@@ -186,4 +186,5 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     public void onReloadButtonClick() {
         search(latestTerm);
     }
+
 }

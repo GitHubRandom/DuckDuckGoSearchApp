@@ -6,15 +6,16 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:hardwareAccelerated="true"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".HomeActivity"
+        <activity
+            android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SearchActivity"
-            android:windowSoftInputMode="stateVisible"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible" />
 
         <receiver android:name=".SearchWidget">
             <intent-filter>
@@ -37,10 +38,11 @@
                 android:resource="@xml/search_widget_info" />
         </receiver>
 
-        <activity android:name=".SettingsActivity"
-            android:parentActivityName=".HomeActivity"
-            android:label="@string/settings"/>
-
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".HomeActivity" />
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>

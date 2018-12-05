@@ -12,19 +12,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentManager;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, HistoryAdapter.OnLastTermDeleted {
 
     RelativeLayout searchField;
     Context context;
     FragmentManager manager;
     ImageButton settingsButton;
     LinearLayout historyButton;
+    BottomSheetDialogFragment fragment;
     boolean darkTheme = false;
 
     @Override
@@ -40,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             WebView.setWebContentsDebuggingEnabled(true);
         }
 
+        fragment = new HistoryFragment();
         manager = getSupportFragmentManager();
         context = this;
 
@@ -60,7 +63,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetDialogFragment fragment = new HistoryFragment();
                 fragment.show(manager, fragment.getTag());
             }
         });
@@ -84,5 +86,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .makeSceneTransitionAnimation(HomeActivity.this,
                         searchField, context.getResources().getString(R.string.search_bar_transition_name));
         startActivity(intent, optionsCompat.toBundle());
+    }
+
+    @Override
+    public void onLastTermDeleted() {
+        fragment.dismiss();
     }
 }

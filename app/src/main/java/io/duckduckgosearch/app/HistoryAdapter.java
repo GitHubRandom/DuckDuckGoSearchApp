@@ -25,6 +25,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private Context context;
     private ArrayList<HistoryItem> list;
     private HistoryDatabase historyDatabase;
+    private OnLastTermDeleted onLastTermDeleted;
+
+    interface OnLastTermDeleted {
+        void onLastTermDeleted();
+    }
 
     HistoryAdapter(Context context, ArrayList<HistoryItem> list) {
         this.context = context;
@@ -43,6 +48,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.ViewHolder holder, int position) {
+        onLastTermDeleted = (OnLastTermDeleted) context;
         if (PrefManager.isDarkTheme(context)) {
             holder.icon.setImageDrawable(
                     context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
@@ -69,6 +75,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        if (getItemCount() == 1) {
+                            onLastTermDeleted.onLastTermDeleted();
+                        }
                         historyDatabase.historyDao().delete(list.get(termPosition));
                         list = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
                         ((Activity)context).runOnUiThread(new Runnable() {
