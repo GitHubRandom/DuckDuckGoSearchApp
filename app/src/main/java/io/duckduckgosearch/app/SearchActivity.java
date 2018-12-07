@@ -16,11 +16,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.room.Room;
 
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
-        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick {
+        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick,
+        WebViewFragment.AdapterUpdate {
 
     AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
@@ -34,6 +39,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     WebViewFragment webViewFragment;
     AutoCompleteAdapter adapter;
     InputMethodManager manager;
+    HistoryDatabase historyDatabase;
     boolean darkTheme;
     boolean fromIntent;
 
@@ -45,6 +51,9 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
             darkTheme = true;
         }
         setContentView(R.layout.activity_search);
+
+        historyDatabase = Room.databaseBuilder(this, HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
+                .build();
 
         manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
@@ -59,11 +68,9 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         progressBar = findViewById(R.id.search_progress);
 
         searchBar = findViewById(R.id.search_bar_edittext);
-        /*if (HistoryManager.getTermsAsStringArray(this) != null) {
-            adapter = new AutoCompleteAdapter(this, R.layout.auto_complete_item,
-                    HistoryManager.getTermsAsStringArray(this), searchBar);
-            searchBar.setAdapter(adapter);
-        }*/
+
+        adapterUpdate();
+
         eraseTextButton = findViewById(R.id.erase_button);
 
         Bundle bundle = getIntent().getExtras();
@@ -130,7 +137,6 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         });
 
         if (darkTheme) {
-            duckLogo.setImageResource(R.drawable.ic_duckduckgo_white_logo);
             findViewById(R.id.search_bar_root).setBackgroundColor(
                     getResources().getColor(R.color.darkThemeColorPrimary));
             searchBarRoot.setBackground(getResources().getDrawable(R.drawable.search_field_bg_dark));
@@ -150,6 +156,28 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         } else {
             super.onBackPressed();
         }
+    }
+
+    void adapterUpdate() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<HistoryItem> historyArrayList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
+                ArrayList<String> historyArrayListStrings = new ArrayList<>();
+                for (int i = 0; i < historyArrayList.size(); i++) {
+                    historyArrayListStrings.add(historyArrayList.get(i).getSearchTerm());
+                }
+                String[] historyArray = Arrays.copyOf(historyArrayListStrings.toArray(), historyArrayList.size(), String[].class);
+                adapter = new AutoCompleteAdapter(SearchActivity.this, R.layout.auto_complete_item
+                        , historyArray, searchBar);
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchBar.setAdapter(adapter);
+                    }
+                });
+            }
+        }).start();
     }
 
     void search(String searchTerm) {
@@ -187,4 +215,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         search(latestTerm);
     }
 
+    @Override
+    public void updateAdapter() {
+        adapterUpdate();
+    }
 }

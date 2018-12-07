@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,7 @@ public class WebViewFragment extends Fragment {
     private Context context;
     private OnSearchTermChange onSearchTermChange;
     private OnWebViewError onWebViewError;
+    private AdapterUpdate adapterUpdate;
     private HistoryDatabase historyDatabase;
 
     public interface OnSearchTermChange {
@@ -47,6 +47,10 @@ public class WebViewFragment extends Fragment {
 
     public interface OnWebViewError {
         void onWebViewError(int errorDescription);
+    }
+
+    public interface AdapterUpdate {
+        void updateAdapter();
     }
 
     public WebViewFragment() {
@@ -113,7 +117,6 @@ public class WebViewFragment extends Fragment {
                             @Override
                             public void run() {
                                 historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
-                                Log.i("History", "Add term success");
                             }
                         }).start();
                     }
@@ -156,6 +159,8 @@ public class WebViewFragment extends Fragment {
                             @Override
                             public void run() {
                                 historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
+                                /*adapterUpdate = (AdapterUpdate) context;
+                                adapterUpdate.updateAdapter();*/
                             }
                         }).start();
                     }

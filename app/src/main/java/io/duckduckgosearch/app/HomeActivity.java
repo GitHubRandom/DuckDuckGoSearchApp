@@ -70,7 +70,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (darkTheme) {
             searchField.setBackground(getResources().getDrawable(R.drawable.search_field_bg_dark));
             findViewById(R.id.home_root).setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
-            ((ImageView)findViewById(R.id.duck_logo)).setImageResource(R.drawable.ic_duckduckgo_white_logo);
             settingsButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_24px_white));
             ((TextView)findViewById(R.id.search_history_button_text)).setTextColor(
                     getResources().getColor(android.R.color.white));
