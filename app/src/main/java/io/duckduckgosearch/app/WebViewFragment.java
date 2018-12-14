@@ -38,7 +38,6 @@ public class WebViewFragment extends Fragment {
     private Context context;
     private OnSearchTermChange onSearchTermChange;
     private OnWebViewError onWebViewError;
-    private AdapterUpdate adapterUpdate;
     private HistoryDatabase historyDatabase;
 
     public interface OnSearchTermChange {
@@ -47,10 +46,6 @@ public class WebViewFragment extends Fragment {
 
     public interface OnWebViewError {
         void onWebViewError(int errorDescription);
-    }
-
-    public interface AdapterUpdate {
-        void updateAdapter();
     }
 
     public WebViewFragment() {
@@ -83,6 +78,9 @@ public class WebViewFragment extends Fragment {
             addHistory = getArguments().getBoolean("add_history");
         }
         webView = view.findViewById(R.id.search_web_view);
+        if (PrefManager.isDarkTheme(getContext())) {
+            webView.setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
+        }
         webView.setVisibility(View.INVISIBLE);
         webView.getSettings().setJavaScriptEnabled(true);
         CookieManager.getInstance().removeAllCookie();

@@ -7,8 +7,8 @@ android {
         applicationId "io.duckduckgosearch.app"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 10000
-        versionName '1.0_pre'
+        versionCode 1
+        versionName '0.1'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

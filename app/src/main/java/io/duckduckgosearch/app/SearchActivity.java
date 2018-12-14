@@ -24,8 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.room.Room;
 
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
-        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick,
-        WebViewFragment.AdapterUpdate {
+        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick {
 
     AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
@@ -215,8 +214,4 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         search(latestTerm);
     }
 
-    @Override
-    public void updateAdapter() {
-        adapterUpdate();
-    }
 }
