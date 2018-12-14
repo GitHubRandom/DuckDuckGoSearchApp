@@ -9,6 +9,14 @@
         android:entryValues="@array/settings_theme_values"
         android:defaultValue="default" />
 
+    <androidx.preference.ListPreference
+        android:title="@string/settings_search_widget_theme_title"
+        android:summary="@string/settings_search_widget_theme_summary"
+        android:key="search_widget_theme"
+        android:entries="@array/settings_search_widget_theme_entries"
+        android:entryValues="@array/settings_search_widget_theme_values"
+        android:defaultValue="light" />
+
     <androidx.preference.SwitchPreference
         android:title="@string/settings_search_history_title"
         android:summary="@string/settings_search_history_summary"

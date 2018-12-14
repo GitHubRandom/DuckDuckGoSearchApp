@@ -10,6 +10,10 @@ class PrefManager {
         return getPreferences(context).getString("app_theme", "default");
     }
 
+    static boolean isSearchWidgetDark(Context context) {
+        return getPreferences(context).getString("search_widget_theme", "light").equals("dark");
+    }
+
     private static SharedPreferences getPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }

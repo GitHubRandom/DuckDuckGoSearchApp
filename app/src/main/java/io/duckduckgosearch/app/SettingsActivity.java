@@ -1,5 +1,7 @@
 package io.duckduckgosearch.app;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
         Preference deleteHistoryPreference;
         Preference aboutPreference;
         HistoryDatabase historyDatabase;
+        ListPreference searchWidgetTheme;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -111,6 +114,20 @@ public class SettingsActivity extends AppCompatActivity {
                                 }
                             });
                     dialog.show();
+                    return true;
+                }
+            });
+
+            searchWidgetTheme = (ListPreference) findPreference("search_widget_theme");
+            searchWidgetTheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Intent intent = new Intent(getContext(), SearchWidget.class);
+                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    int[] ids = AppWidgetManager.getInstance(getContext())
+                            .getAppWidgetIds(new ComponentName(getContext(), SearchWidget.class));
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                    getContext().sendBroadcast(intent);
                     return true;
                 }
             });

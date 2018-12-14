@@ -39,6 +39,16 @@
     </string-array>
     <string name="settings_search_history_title">Search history</string>
     <string name="settings_search_history_summary">Choose to enable search history or not</string>
+    <string-array name="settings_search_widget_theme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="settings_search_widget_theme_values">
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string name="settings_search_widget_theme_title">Search widget theme</string>
+    <string name="settings_search_widget_theme_summary">Select search widget theme</string>
     <string name="settings_delete_search_history_title">Delete search history</string>
     <string name="settings_delete_search_history_success">Successfully deleted</string>
     <string name="settings_delete_search_history_already_done">Already deleted history</string>
