@@ -43,23 +43,23 @@ public class SettingsActivity extends AppCompatActivity {
             aboutPreference = findPreference("about_app");
             aboutPreference.setIntent(new Intent(getActivity(), AboutActivity.class));
 
-            themePreference = (ListPreference) findPreference("app_theme");
+            themePreference = (ListPreference) findPreference("search_theme");
             switch (PrefManager.getTheme(getContext())) {
                 case "default":
                     themePreference.setSummary("Default");
-                    themePreference.setIcon(R.drawable.app_theme_drawable_default);
+                    themePreference.setIcon(R.drawable.search_theme_drawable_default);
                     break;
                 case "basic":
                     themePreference.setSummary("Basic");
-                    themePreference.setIcon(R.drawable.app_theme_drawable_basic);
+                    themePreference.setIcon(R.drawable.search_theme_drawable_basic);
                     break;
                 case "gray":
                     themePreference.setSummary("Gray");
-                    themePreference.setIcon(R.drawable.app_theme_drawable_gray);
+                    themePreference.setIcon(R.drawable.search_theme_drawable_gray);
                     break;
                 case "dark":
                     themePreference.setSummary("Dark");
-                    themePreference.setIcon(R.drawable.app_theme_drawable_dark);
+                    themePreference.setIcon(R.drawable.search_theme_drawable_dark);
                     break;
             }
             themePreference.setOnPreferenceChangeListener(new androidx.preference.Preference.OnPreferenceChangeListener() {
@@ -68,20 +68,26 @@ public class SettingsActivity extends AppCompatActivity {
                     switch (newValue.toString()) {
                         case "default":
                             preference.setSummary("Default");
-                            preference.setIcon(R.drawable.app_theme_drawable_default);
+                            preference.setIcon(R.drawable.search_theme_drawable_default);
                             break;
                         case "basic":
                             preference.setSummary("Basic");
-                            preference.setIcon(R.drawable.app_theme_drawable_basic);
+                            preference.setIcon(R.drawable.search_theme_drawable_basic);
                             break;
                         case "gray":
                             preference.setSummary("Gray");
-                            preference.setIcon(R.drawable.app_theme_drawable_gray);
+                            preference.setIcon(R.drawable.search_theme_drawable_gray);
                             break;
                         case "dark":
                             preference.setSummary("Dark");
-                            preference.setIcon(R.drawable.app_theme_drawable_dark);
+                            preference.setIcon(R.drawable.search_theme_drawable_dark);
                             break;
+                    }
+                    if ((newValue.toString().equals("dark") && !themePreference.getValue().equals("dark")) ||
+                            (!newValue.toString().equals("dark") && themePreference.getValue().equals("dark"))) {
+                        Intent intent = new Intent(getContext(), SettingsActivity.class);
+                        getActivity().finish();
+                        startActivity(intent);
                     }
                     return true;
                 }
@@ -119,9 +125,17 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             searchWidgetTheme = (ListPreference) findPreference("search_widget_theme");
+            if (PrefManager.getTheme(getContext()).equals("light")) {
+                searchWidgetTheme.setSummary("Light");
+            } else {
+                searchWidgetTheme.setSummary("Dark");
+            }
             searchWidgetTheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String newValueC = newValue.toString().substring(0, 1).toUpperCase() +
+                            newValue.toString().substring(1);
+                    searchWidgetTheme.setSummary(newValueC);
                     Intent intent = new Intent(getContext(), SearchWidget.class);
                     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                     int[] ids = AppWidgetManager.getInstance(getContext())

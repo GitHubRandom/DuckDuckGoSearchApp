@@ -7,7 +7,11 @@ import android.preference.PreferenceManager;
 class PrefManager {
 
     static String getTheme(Context context) {
-        return getPreferences(context).getString("app_theme", "default");
+        return getPreferences(context).getString("search_theme", "default");
+    }
+
+    static String getSearchWidgetTheme(Context context) {
+        return getPreferences(context).getString("search_widget_theme", "light");
     }
 
     static boolean isSearchWidgetDark(Context context) {

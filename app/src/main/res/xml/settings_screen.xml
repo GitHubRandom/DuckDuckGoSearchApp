@@ -4,7 +4,7 @@
     <androidx.preference.ListPreference
         android:title="@string/settings_theme_title"
         android:summary="@string/settings_theme_title"
-        android:key="app_theme"
+        android:key="search_theme"
         android:entries="@array/settings_theme_entries"
         android:entryValues="@array/settings_theme_values"
         android:defaultValue="default" />
