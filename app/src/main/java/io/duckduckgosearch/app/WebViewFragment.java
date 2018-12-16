@@ -39,6 +39,11 @@ public class WebViewFragment extends Fragment {
     private OnSearchTermChange onSearchTermChange;
     private OnWebViewError onWebViewError;
     private HistoryDatabase historyDatabase;
+    private UpdateAutoCompleteAdapter updater;
+
+    public interface UpdateAutoCompleteAdapter {
+        void updateAutoCompleteAdapter();
+    }
 
     public interface OnSearchTermChange {
         void onSearchTermChange(String searchTerm);
@@ -115,6 +120,8 @@ public class WebViewFragment extends Fragment {
                             @Override
                             public void run() {
                                 historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
+                                updater = (UpdateAutoCompleteAdapter) context;
+                                updater.updateAutoCompleteAdapter();
                             }
                         }).start();
                     }
@@ -148,6 +155,12 @@ public class WebViewFragment extends Fragment {
         } else {
             webView.setWebViewClient(new WebViewClient() {
                 @Override
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                    onWebViewError = (OnWebViewError) context;
+                    onWebViewError.onWebViewError(errorCode);
+                }
+
+                @Override
                 public void onPageFinished(WebView view, String url) {
                     webView.loadUrl(
                             "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
@@ -157,8 +170,8 @@ public class WebViewFragment extends Fragment {
                             @Override
                             public void run() {
                                 historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
-                                /*adapterUpdate = (AdapterUpdate) context;
-                                adapterUpdate.updateAdapter();*/
+                                updater = (UpdateAutoCompleteAdapter) context;
+                                updater.updateAutoCompleteAdapter();
                             }
                         }).start();
                     }

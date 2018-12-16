@@ -24,7 +24,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.room.Room;
 
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
-        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick {
+        AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick,
+        WebViewFragment.UpdateAutoCompleteAdapter {
 
     AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
@@ -90,6 +91,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         if (savedInstanceState == null && !fromIntent) {
             searchBar.requestFocus();
         } else {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             if (!searchBar.hasFocus()) {
                 duckLogo.setVisibility(View.VISIBLE);
             }
@@ -161,6 +163,9 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         new Thread(new Runnable() {
             @Override
             public void run() {
+                if (adapter != null) {
+                    adapter.clear();
+                }
                 ArrayList<HistoryItem> historyArrayList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
                 ArrayList<String> historyArrayListStrings = new ArrayList<>();
                 for (int i = 0; i < historyArrayList.size(); i++) {
@@ -214,4 +219,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         search(latestTerm);
     }
 
+    @Override
+    public void updateAutoCompleteAdapter() {
+        adapterUpdate();
+    }
 }
