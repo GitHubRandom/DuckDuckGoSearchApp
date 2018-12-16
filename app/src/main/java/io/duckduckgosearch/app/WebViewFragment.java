@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,7 +237,7 @@ public class WebViewFragment extends Fragment {
         }
     }
 
-    void updateSafeSearchValues(String cookies) {
+    private void updateSafeSearchValues(String cookies) {
         if (cookies.contains(" p=-2") && !PrefManager.getSafeSearchLevel(getContext()).equals("off")) {
             PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "off").apply();
         } else if (!cookies.contains(" p=") || (cookies.contains(" p=")
