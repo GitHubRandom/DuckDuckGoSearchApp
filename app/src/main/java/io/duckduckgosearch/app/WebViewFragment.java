@@ -39,10 +39,10 @@ public class WebViewFragment extends Fragment {
     private OnSearchTermChange onSearchTermChange;
     private OnWebViewError onWebViewError;
     private HistoryDatabase historyDatabase;
-    private UpdateAutoCompleteAdapter updater;
+    private OnPageFinish onPageFinish;
 
-    public interface UpdateAutoCompleteAdapter {
-        void updateAutoCompleteAdapter();
+    public interface OnPageFinish {
+        void onPageFinish();
     }
 
     public interface OnSearchTermChange {
@@ -120,8 +120,8 @@ public class WebViewFragment extends Fragment {
                             @Override
                             public void run() {
                                 historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
-                                updater = (UpdateAutoCompleteAdapter) context;
-                                updater.updateAutoCompleteAdapter();
+                                onPageFinish = (OnPageFinish) context;
+                                onPageFinish.onPageFinish();
                             }
                         }).start();
                     }
@@ -170,8 +170,8 @@ public class WebViewFragment extends Fragment {
                             @Override
                             public void run() {
                                 historyDatabase.historyDao().insertAll(new HistoryItem(data.trim(), Calendar.getInstance().getTime()));
-                                updater = (UpdateAutoCompleteAdapter) context;
-                                updater.updateAutoCompleteAdapter();
+                                onPageFinish = (OnPageFinish) context;
+                                onPageFinish.onPageFinish();
                             }
                         }).start();
                     }

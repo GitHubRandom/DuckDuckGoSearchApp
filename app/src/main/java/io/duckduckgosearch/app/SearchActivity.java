@@ -25,7 +25,7 @@ import androidx.room.Room;
 
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
         AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick,
-        WebViewFragment.UpdateAutoCompleteAdapter {
+        WebViewFragment.OnPageFinish {
 
     AutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
@@ -119,10 +119,20 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
                         searchBarRoot.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT));
                     }
+                    if (webViewFragment != null) {
+                        fragmentManager.beginTransaction()
+                                .hide(webViewFragment)
+                                .commit();
+                    }
                 } else {
                     duckLogo.setVisibility(View.VISIBLE);
                     if (getResources().getBoolean(R.bool.isTabletAndLandscape)) {
                         searchBarRoot.setLayoutParams(new LinearLayout.LayoutParams(550, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    }
+                    if (webViewFragment != null) {
+                        fragmentManager.beginTransaction()
+                                .show(webViewFragment)
+                                .commit();
                     }
                 }
             }
@@ -163,9 +173,6 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (adapter != null) {
-                    adapter.clear();
-                }
                 ArrayList<HistoryItem> historyArrayList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
                 ArrayList<String> historyArrayListStrings = new ArrayList<>();
                 for (int i = 0; i < historyArrayList.size(); i++) {
@@ -220,7 +227,13 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     }
 
     @Override
-    public void updateAutoCompleteAdapter() {
+    public void onPageFinish() {
         adapterUpdate();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }
