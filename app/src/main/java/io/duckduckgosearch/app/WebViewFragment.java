@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import androidx.room.Room;
 public class WebViewFragment extends Fragment {
 
     private static final String SEARCH_URL = "https://duckduckgo.com/?q=";
+    private static final String DEFAULT_COOKIE = "ae=''";
     private static final String BASIC_COOKIE = "ae=b";
     private static final String GRAY_COOKIE = "ae=g";
     private static final String DARK_COOKIE = "ae=d";
@@ -88,19 +91,7 @@ public class WebViewFragment extends Fragment {
         }
         webView.setVisibility(View.INVISIBLE);
         webView.getSettings().setJavaScriptEnabled(true);
-        CookieManager.getInstance().removeAllCookie();
-        CookieManager.getInstance().setCookie("duckduckgo.com", "o=-1");
-        switch (PrefManager.getTheme(getContext())) {
-            case "basic":
-                CookieManager.getInstance().setCookie("duckduckgo.com", BASIC_COOKIE);
-                break;
-            case "gray":
-                CookieManager.getInstance().setCookie("duckduckgo.com", GRAY_COOKIE);
-                break;
-            case "dark":
-                CookieManager.getInstance().setCookie("duckduckgo.com", DARK_COOKIE);
-                break;
-        }
+        setCookies();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             webView.setWebViewClient(new WebViewClient() {
@@ -136,6 +127,7 @@ public class WebViewFragment extends Fragment {
                         startActivity(browserIntent);
                         return true;
                     } else {
+                        webView.setVisibility(View.GONE);
                         onSearchTermChange = (OnSearchTermChange) context;
                         try {
                             if (url.contains("&")) {
@@ -148,6 +140,7 @@ public class WebViewFragment extends Fragment {
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
+                        updateSafeSearchValues(CookieManager.getInstance().getCookie("duckduckgo.com"));
                     }
                     return false;
                 }
@@ -185,6 +178,7 @@ public class WebViewFragment extends Fragment {
                         startActivity(browserIntent);
                         return true;
                     } else {
+                        webView.setVisibility(View.GONE);
                         onSearchTermChange = (OnSearchTermChange) context;
                         try {
                             if (url.contains("&")) {
@@ -198,6 +192,7 @@ public class WebViewFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
+                    updateSafeSearchValues(CookieManager.getInstance().getCookie("duckduckgo.com"));
                     return false;
                 }
             });
@@ -212,6 +207,46 @@ public class WebViewFragment extends Fragment {
 
     void requestFocusOnWebView() {
         webView.requestFocus();
+    }
+
+    private void setCookies() {
+        CookieManager.getInstance().setCookie("duckduckgo.com", "o=-1");
+        switch (PrefManager.getTheme(getContext())) {
+            case "default":
+                CookieManager.getInstance().setCookie("duckduckgo.com", DEFAULT_COOKIE);
+                break;
+            case "basic":
+                CookieManager.getInstance().setCookie("duckduckgo.com", BASIC_COOKIE);
+                break;
+            case "gray":
+                CookieManager.getInstance().setCookie("duckduckgo.com", GRAY_COOKIE);
+                break;
+            case "dark":
+                CookieManager.getInstance().setCookie("duckduckgo.com", DARK_COOKIE);
+                break;
+        }
+        switch (PrefManager.getSafeSearchLevel(getContext())) {
+            case "off":
+                CookieManager.getInstance().setCookie("duckduckgo.com", "p=-2");
+                break;
+            case "moderate":
+                CookieManager.getInstance().setCookie("duckduckgo.com", "p=");
+                break;
+            case "strict":
+                CookieManager.getInstance().setCookie("duckduckgo.com", "p=1");
+                break;
+        }
+    }
+
+    void updateSafeSearchValues(String cookies) {
+        if (cookies.contains(" p=-2") && !PrefManager.getSafeSearchLevel(getContext()).equals("off")) {
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "off").apply();
+        } else if (!cookies.contains(" p=") || (cookies.contains(" p=")
+                && !PrefManager.getSafeSearchLevel(getContext()).equals("moderate"))) {
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "moderate").apply();
+        } else if (cookies.contains(" p=1") && !PrefManager.getSafeSearchLevel(getContext()).equals("strict")) {
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "strict").apply();
+        }
     }
 
 }

@@ -23,6 +23,14 @@
         android:key="search_history"
         android:defaultValue="true"/>
 
+    <androidx.preference.ListPreference
+        android:title="@string/settings_safe_search_title"
+        android:summary="@string/settings_safe_search_summary"
+        android:key="safe_search"
+        android:entries="@array/settings_safe_search_entries"
+        android:entryValues="@array/settings_safe_search_values"
+        android:defaultValue="moderate"/>
+
     <androidx.preference.Preference
         android:title="@string/settings_delete_search_history_title"
         android:key="delete_search_history" />

@@ -29,11 +29,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
-        ListPreference themePreference;
+        ListPreference themePreference, searchWidgetTheme, safeSearch;
         Preference deleteHistoryPreference;
         Preference aboutPreference;
         HistoryDatabase historyDatabase;
-        ListPreference searchWidgetTheme;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -125,11 +124,8 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             searchWidgetTheme = (ListPreference) findPreference("search_widget_theme");
-            if (PrefManager.getTheme(getContext()).equals("light")) {
-                searchWidgetTheme.setSummary("Light");
-            } else {
-                searchWidgetTheme.setSummary("Dark");
-            }
+            String searchWidgetThemeValue = PrefManager.getSearchWidgetTheme(getContext());
+            searchWidgetTheme.setSummary(searchWidgetThemeValue.substring(0,1).toUpperCase() + searchWidgetThemeValue.substring(1));
             searchWidgetTheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -142,6 +138,19 @@ public class SettingsActivity extends AppCompatActivity {
                             .getAppWidgetIds(new ComponentName(getContext(), SearchWidget.class));
                     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
                     getContext().sendBroadcast(intent);
+                    return true;
+                }
+            });
+
+            safeSearch = (ListPreference) findPreference("safe_search");
+            String safeSearchValue = PrefManager.getSafeSearchLevel(getContext());
+            safeSearch.setSummary(safeSearchValue.substring(0,1).toUpperCase() + safeSearchValue.substring(1));
+            safeSearch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    String newValueC = newValue.toString().substring(0, 1).toUpperCase() +
+                            newValue.toString().substring(1);
+                    safeSearch.setSummary(newValueC);
                     return true;
                 }
             });

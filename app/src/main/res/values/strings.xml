@@ -37,8 +37,12 @@
         <item>gray</item>
         <item>dark</item>
     </string-array>
+
     <string name="settings_search_history_title">Search history</string>
     <string name="settings_search_history_summary">Choose to enable search history or not</string>
+
+    <string name="settings_search_widget_theme_title">Search widget theme</string>
+    <string name="settings_search_widget_theme_summary">Select search widget theme</string>
     <string-array name="settings_search_widget_theme_entries">
         <item>Light</item>
         <item>Dark</item>
@@ -47,8 +51,20 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
-    <string name="settings_search_widget_theme_title">Search widget theme</string>
-    <string name="settings_search_widget_theme_summary">Select search widget theme</string>
+
+    <string name="settings_safe_search_title">Safe search</string>
+    <string name="settings_safe_search_summary">Select safe search level</string>
+    <string-array name="settings_safe_search_entries">
+        <item>Off</item>
+        <item>Moderate</item>
+        <item>Strict</item>
+    </string-array>
+    <string-array name="settings_safe_search_values">
+        <item>off</item>
+        <item>moderate</item>
+        <item>strict</item>
+    </string-array>
+
     <string name="settings_delete_search_history_title">Delete search history</string>
     <string name="settings_delete_search_history_success">Successfully deleted</string>
     <string name="settings_delete_search_history_already_done">Already deleted history</string>
@@ -56,6 +72,7 @@
     <string name="settings_delete_search_history_dialog_message">Your history will be deleted. This action cannot be undone</string>
     <string name="settings_delete_search_history_dialog_positive_btn">Yes</string>
     <string name="settings_delete_search_history_dialog_negative_btn">Cancel</string>
+
     <string name="settings_about">About</string>
     <string name="settings_about_version">Version: %s</string>
     <string name="settings_about_disclaimer">Disclaimer :</string>
