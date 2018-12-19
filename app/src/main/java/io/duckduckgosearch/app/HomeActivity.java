@@ -62,7 +62,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.show(manager, fragment.getTag());
+                if (!fragment.isAdded()) {
+                    fragment.show(manager, fragment.getTag());
+                }
             }
         });
 

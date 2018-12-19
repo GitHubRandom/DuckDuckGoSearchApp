@@ -175,8 +175,8 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
             public void run() {
                 ArrayList<HistoryItem> historyArrayList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
                 ArrayList<String> historyArrayListStrings = new ArrayList<>();
-                for (int i = 0; i < historyArrayList.size(); i++) {
-                    historyArrayListStrings.add(historyArrayList.get(i).getSearchTerm());
+                for (HistoryItem item : historyArrayList) {
+                    historyArrayListStrings.add(item.getSearchTerm());
                 }
                 String[] historyArray = Arrays.copyOf(historyArrayListStrings.toArray(), historyArrayList.size(), String[].class);
                 adapter = new AutoCompleteAdapter(SearchActivity.this, R.layout.auto_complete_item
@@ -192,7 +192,6 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     }
 
     void search(String searchTerm) {
-        searchBar.clearFocus();
         progressBar.setVisibility(View.VISIBLE);
         webViewFragment = WebViewFragment.newInstance(searchTerm, PrefManager.isHistoryEnabled(this));
         latestTerm = searchTerm;
@@ -203,6 +202,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
                 .replace(R.id.frame_layout, webViewFragment)
                 .commit();
         searchBar.clearFocus();
+        searchBar.setSelection(0);
         manager.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
