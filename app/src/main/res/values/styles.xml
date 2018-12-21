@@ -5,6 +5,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="dialogCornerRadius">10dp</item>
     </style>
@@ -19,6 +20,7 @@
         <item name="colorPrimaryDark">@color/darkThemeColorPrimaryDark</item>
         <item name="colorAccent">@color/darkThemeColorAccent</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/darkThemeColorPrimary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="alertDialogTheme">@style/ListPreferenceStyle</item>
     </style>
