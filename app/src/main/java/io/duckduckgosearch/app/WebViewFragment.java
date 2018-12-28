@@ -52,7 +52,7 @@ public class WebViewFragment extends Fragment {
     }
 
     public interface OnWebViewError {
-        void onWebViewError(int errorDescription);
+        void onWebViewError(int errorCode);
     }
 
     public WebViewFragment() {

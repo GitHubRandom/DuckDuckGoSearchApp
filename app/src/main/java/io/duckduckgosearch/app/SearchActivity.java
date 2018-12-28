@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -214,11 +215,13 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
 
     @Override
-    public void onWebViewError(int errorDescription) {
-        progressBar.setVisibility(View.GONE);
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, new ErrorFragment())
-                .commit();
+    public void onWebViewError(int errorCode) {
+        if (errorCode == WebViewClient.ERROR_HOST_LOOKUP || errorCode == WebViewClient.ERROR_TIMEOUT || errorCode == WebViewClient.ERROR_CONNECT) {
+            progressBar.setVisibility(View.GONE);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.frame_layout, new ErrorFragment())
+                    .commit();
+        }
     }
 
     @Override
