@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Calendar;
 
@@ -80,6 +81,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                         }
                         historyDatabase.historyDao().delete(list.get(termPosition));
                         list = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
+                        Collections.reverse(list);
                         ((Activity)context).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
