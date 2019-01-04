@@ -46,7 +46,12 @@ public class HistoryFragment extends BottomSheetDialogFragment {
                 }
                 Collections.reverse(historyList);
                 adapter = new HistoryAdapter(getContext(), historyList);
-                historyListRv.setAdapter(adapter);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        historyListRv.setAdapter(adapter);
+                    }
+                });
             }
         }).start();
 

@@ -1,5 +1,6 @@
 package io.duckduckgosearch.app;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -120,51 +123,56 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private String calculatePastTime(Date date) {
+        DateFormat format = new SimpleDateFormat("EEE. MMM d, yyyy");
+        DateFormat formatDay = new SimpleDateFormat("EEEE");
+        DateFormat formatNoYear = new SimpleDateFormat("EEE. MMM d");
+
         Calendar currentCalendar = Calendar.getInstance();
         currentCalendar.setTime(Calendar.getInstance().getTime());
-        int year = currentCalendar.get(Calendar.YEAR);
-        int month = currentCalendar.get(Calendar.MONTH);
-        int week = currentCalendar.get(Calendar.WEEK_OF_YEAR);
         int day = currentCalendar.get(Calendar.DAY_OF_YEAR);
+        int year = currentCalendar.get(Calendar.YEAR);
 
         Calendar calendarToCompare = Calendar.getInstance();
         calendarToCompare.setTime(date);
-        int yearToCompare = calendarToCompare.get(Calendar.YEAR);
-        int monthToCompare = calendarToCompare.get(Calendar.MONTH);
-        int weekToCompare = calendarToCompare.get(Calendar.WEEK_OF_YEAR);
         int dayToCompare = calendarToCompare.get(Calendar.DAY_OF_YEAR);
+        int yearToCompare = calendarToCompare.get(Calendar.YEAR);
 
-        if (dayToCompare == day) {
-            return context.getResources().getString(R.string.today);
-        } else if (weekToCompare == week) {
-            int diff = day - dayToCompare;
-            if (diff == 1) {
-                return context.getResources().getString(R.string.yesterday);
+        long diff = currentCalendar.getTimeInMillis() - calendarToCompare.getTimeInMillis();
+        long seconds, minutes, hours, days;
+
+        seconds = diff / 1000;
+        if (seconds >= 60) {
+            minutes = seconds / 60;
+            if (minutes >= 60) {
+                hours = minutes / 60;
+                if (hours >= 24) {
+                    days = hours / 24;
+                    if (days < 2 && day - dayToCompare < 2 && day - dayToCompare > 0) {
+                        return context.getResources().getString(R.string.time_calculation_yesterday);
+                    } else if (days < 7 && day - dayToCompare < 7 && day - dayToCompare > 0) {
+                        return formatDay.format(date);
+                    } else {
+                        if (yearToCompare == year) {
+                            return formatNoYear.format(date);
+                        } else {
+                            return format.format(date);
+                        }
+                    }
+                } else {
+                    if (hours == 1) {
+                        return context.getResources().getString(R.string.time_calculation_hour, 1);
+                    } else {
+                        return context.getResources().getString(R.string.time_calculation_hours, hours);
+                    }
+                }
             } else {
-                return context.getResources().getString(R.string.past_days, diff);
-            }
-        } else if (monthToCompare == month) {
-            int diff = week - weekToCompare;
-            if (diff == 1) {
-                return context.getResources().getString(R.string.last_week);
-            } else {
-                return context.getResources().getString(R.string.past_weeks, diff);
-            }
-        } else if (yearToCompare == year) {
-            int diff = month - monthToCompare;
-            if (diff == 1) {
-                return context.getResources().getString(R.string.last_month);
-            } else {
-                return context.getResources().getString(R.string.past_months, diff);
+                return context.getResources().getString(R.string.time_calculation_minutes, minutes);
             }
         } else {
-            int diff = year - yearToCompare;
-            if (diff == 1) {
-                return context.getResources().getString(R.string.last_year);
-            } else {
-                return context.getResources().getString(R.string.past_years, diff);
-            }
+            return context.getResources().getString(R.string.time_calculation_few_moments);
         }
+
     }
 }
