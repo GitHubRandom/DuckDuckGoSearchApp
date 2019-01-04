@@ -15,6 +15,7 @@ public class SearchWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
         Intent intent = new Intent(context, SearchActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1 + appWidgetId, intent, 0);
 
         RemoteViews views;

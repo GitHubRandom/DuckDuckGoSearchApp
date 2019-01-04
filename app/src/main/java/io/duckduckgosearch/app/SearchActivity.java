@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -175,6 +176,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
             @Override
             public void run() {
                 ArrayList<HistoryItem> historyArrayList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
+                Collections.reverse(historyArrayList);
                 ArrayList<String> historyArrayListStrings = new ArrayList<>();
                 for (HistoryItem item : historyArrayList) {
                     historyArrayListStrings.add(item.getSearchTerm());
