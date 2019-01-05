@@ -16,6 +16,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * This is a custom adapter for search suggestions list
+ */
+
 @SuppressWarnings("NullableProblems")
 public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
@@ -81,5 +85,4 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
         return convertView;
     }
-
 }

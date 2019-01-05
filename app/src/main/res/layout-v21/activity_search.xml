@@ -56,8 +56,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:dropDownVerticalOffset="0dp"
-                android:popupBackground="@null"
-                android:popupElevation="10dp"
+                android:popupBackground="@android:color/transparent"
                 android:singleLine="true" />
 
             <ImageButton
