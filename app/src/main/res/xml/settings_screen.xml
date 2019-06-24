@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.preference.ListPreference
+    <ListPreferenceCompat
         android:title="@string/settings_theme_title"
         android:summary="@string/settings_theme_title"
         android:key="search_theme"
@@ -9,7 +9,7 @@
         android:entryValues="@array/settings_theme_values"
         android:defaultValue="default" />
 
-    <androidx.preference.ListPreference
+    <ListPreferenceCompat
         android:title="@string/settings_search_widget_theme_title"
         android:summary="@string/settings_search_widget_theme_summary"
         android:key="search_widget_theme"
@@ -17,13 +17,13 @@
         android:entryValues="@array/settings_search_widget_theme_values"
         android:defaultValue="light" />
 
-    <androidx.preference.SwitchPreference
+    <SwitchPreferenceCompat
         android:title="@string/settings_search_history_title"
         android:summary="@string/settings_search_history_summary"
         android:key="search_history"
         android:defaultValue="true"/>
 
-    <androidx.preference.ListPreference
+    <ListPreferenceCompat
         android:title="@string/settings_safe_search_title"
         android:summary="@string/settings_safe_search_summary"
         android:key="safe_search"
@@ -31,12 +31,12 @@
         android:entryValues="@array/settings_safe_search_values"
         android:defaultValue="moderate"/>
 
-    <androidx.preference.Preference
+    <Preference
         android:title="@string/settings_delete_search_history_title"
         android:key="delete_search_history" />
 
-    <androidx.preference.Preference
+    <Preference
         android:title="@string/settings_about"
         android:key="about_app"/>
 
-</androidx.preference.PreferenceScreen>
+</PreferenceScreen>
