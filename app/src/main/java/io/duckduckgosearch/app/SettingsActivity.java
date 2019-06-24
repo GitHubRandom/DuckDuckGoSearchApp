@@ -1,11 +1,14 @@
 package io.duckduckgosearch.app;
 
+import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,17 +36,24 @@ public class SettingsActivity extends AppCompatActivity {
         Preference deleteHistoryPreference;
         Preference aboutPreference;
         HistoryDatabase historyDatabase;
+        Context context;
+
+        @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
+            this.context = context;
+        }
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            addPreferencesFromResource(R.xml.settings_screen);
-            historyDatabase = Room.databaseBuilder(getContext(), HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
+            setPreferencesFromResource(R.xml.settings_screen, rootKey);
+            historyDatabase = Room.databaseBuilder(context, HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
                     .build();
             aboutPreference = findPreference("about_app");
             aboutPreference.setIntent(new Intent(getActivity(), AboutActivity.class));
 
             themePreference = (ListPreference) findPreference("search_theme");
-            switch (PrefManager.getTheme(getContext())) {
+            switch (PrefManager.getTheme(context)) {
                 case "default":
                     themePreference.setSummary("Default");
                     themePreference.setIcon(R.drawable.search_theme_drawable_default);
@@ -84,8 +94,8 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                     if ((newValue.toString().equals("dark") && !themePreference.getValue().equals("dark")) ||
                             (!newValue.toString().equals("dark") && themePreference.getValue().equals("dark"))) {
-                        Intent intent = new Intent(getContext(), SettingsActivity.class);
-                        getActivity().finish();
+                        Intent intent = new Intent(context, SettingsActivity.class);
+                        ((Activity)context).finish();
                         startActivity(intent);
                     }
                     return true;
@@ -96,9 +106,9 @@ public class SettingsActivity extends AppCompatActivity {
             deleteHistoryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                    dialog.setTitle(getContext().getResources().getString(R.string.settings_delete_search_history_dialog_title));
-                    dialog.setMessage(getContext().getResources().getString(R.string.settings_delete_search_history_dialog_message));
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                    dialog.setTitle(context.getResources().getString(R.string.settings_delete_search_history_dialog_title));
+                    dialog.setMessage(context.getResources().getString(R.string.settings_delete_search_history_dialog_message));
                     dialog.setPositiveButton(R.string.settings_delete_search_history_dialog_positive_btn,
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -124,7 +134,7 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             searchWidgetTheme = (ListPreference) findPreference("search_widget_theme");
-            String searchWidgetThemeValue = PrefManager.getSearchWidgetTheme(getContext());
+            String searchWidgetThemeValue = PrefManager.getSearchWidgetTheme(context);
             searchWidgetTheme.setSummary(searchWidgetThemeValue.substring(0,1).toUpperCase() + searchWidgetThemeValue.substring(1));
             searchWidgetTheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -132,18 +142,18 @@ public class SettingsActivity extends AppCompatActivity {
                     String newValueC = newValue.toString().substring(0, 1).toUpperCase() +
                             newValue.toString().substring(1);
                     searchWidgetTheme.setSummary(newValueC);
-                    Intent intent = new Intent(getContext(), SearchWidget.class);
+                    Intent intent = new Intent(context, SearchWidget.class);
                     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    int[] ids = AppWidgetManager.getInstance(getContext())
-                            .getAppWidgetIds(new ComponentName(getContext(), SearchWidget.class));
+                    int[] ids = AppWidgetManager.getInstance(context)
+                            .getAppWidgetIds(new ComponentName(context, SearchWidget.class));
                     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                    getContext().sendBroadcast(intent);
+                    context.sendBroadcast(intent);
                     return true;
                 }
             });
 
             safeSearch = (ListPreference) findPreference("safe_search");
-            String safeSearchValue = PrefManager.getSafeSearchLevel(getContext());
+            String safeSearchValue = PrefManager.getSafeSearchLevel(context);
             safeSearch.setSummary(safeSearchValue.substring(0,1).toUpperCase() + safeSearchValue.substring(1));
             safeSearch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override

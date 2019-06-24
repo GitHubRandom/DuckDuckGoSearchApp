@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import java.util.Calendar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
 
@@ -239,12 +239,12 @@ public class WebViewFragment extends Fragment {
 
     private void updateSafeSearchValues(String cookies) {
         if (cookies.contains(" p=-2") && !PrefManager.getSafeSearchLevel(getContext()).equals("off")) {
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "off").apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("safe_search", "off").apply();
         } else if (!cookies.contains(" p=") || (cookies.contains(" p=")
                 && !PrefManager.getSafeSearchLevel(getContext()).equals("moderate"))) {
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "moderate").apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("safe_search", "moderate").apply();
         } else if (cookies.contains(" p=1") && !PrefManager.getSafeSearchLevel(getContext()).equals("strict")) {
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("safe_search", "strict").apply();
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("safe_search", "strict").apply();
         }
     }
 

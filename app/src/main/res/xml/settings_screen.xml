@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreferenceCompat
+    <ListPreference
         android:title="@string/settings_theme_title"
         android:summary="@string/settings_theme_title"
         android:key="search_theme"
@@ -9,7 +9,7 @@
         android:entryValues="@array/settings_theme_values"
         android:defaultValue="default" />
 
-    <ListPreferenceCompat
+    <ListPreference
         android:title="@string/settings_search_widget_theme_title"
         android:summary="@string/settings_search_widget_theme_summary"
         android:key="search_widget_theme"
@@ -17,13 +17,13 @@
         android:entryValues="@array/settings_search_widget_theme_values"
         android:defaultValue="light" />
 
-    <SwitchPreferenceCompat
+    <SwitchPreference
         android:title="@string/settings_search_history_title"
         android:summary="@string/settings_search_history_summary"
         android:key="search_history"
         android:defaultValue="true"/>
 
-    <ListPreferenceCompat
+    <ListPreference
         android:title="@string/settings_safe_search_title"
         android:summary="@string/settings_safe_search_summary"
         android:key="safe_search"
