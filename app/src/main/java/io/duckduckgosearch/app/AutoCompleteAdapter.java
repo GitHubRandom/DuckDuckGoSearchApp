@@ -20,7 +20,6 @@ import androidx.annotation.Nullable;
  * This is a custom adapter for search suggestions list
  */
 
-@SuppressWarnings("NullableProblems")
 public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
     private Context context;
@@ -32,8 +31,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
         void onItemClickListener(String searchTerm);
     }
 
-    public AutoCompleteAdapter(@NonNull Context context, int resource,
-                               @NonNull String[] objects, AutoCompleteTextView searchBar) {
+    AutoCompleteAdapter(@NonNull Context context, int resource,
+                        @NonNull String[] objects, AutoCompleteTextView searchBar) {
         super(context, resource, objects);
         this.context = context;
         resId = resource;
