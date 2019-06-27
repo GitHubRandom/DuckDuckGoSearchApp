@@ -34,7 +34,7 @@ public class WebViewFragment extends Fragment {
     private static final String BASIC_COOKIE = "ae=b";
     private static final String GRAY_COOKIE = "ae=g";
     private static final String DARK_COOKIE = "ae=d";
-    String data = "";
+    private String data = "";
     private boolean addHistory = false;
     private WebView webView;
     private Context context;
@@ -78,13 +78,14 @@ public class WebViewFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web_view, container, false);
-        historyDatabase = Room.databaseBuilder(getContext(), HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
+        historyDatabase = Room.databaseBuilder(context, HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
                 .build();
         if (getArguments() != null) {
             data = getArguments().getString("data");
             addHistory = getArguments().getBoolean("add_history");
         }
         webView = view.findViewById(R.id.search_web_view);
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         if (PrefManager.isDarkTheme(getContext())) {
             webView.setBackgroundColor(getResources().getColor(R.color.darkThemeColorPrimary));
         }
