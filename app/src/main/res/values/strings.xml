@@ -5,6 +5,7 @@
     <string name="search_bar_transition_name">search_bar</string>
     <string name="search_history">Search history</string>
     <string name="search_history_empty">No search history yet</string>
+    <string name="search_history_disabled">Search history disabled</string>
     <string name="search_history_min">History</string>
 
     <string name="internet_error">Check your internet connection</string>
