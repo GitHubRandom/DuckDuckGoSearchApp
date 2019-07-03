@@ -53,7 +53,12 @@ public class HistoryFragment extends BottomSheetDialogFragment {
                 public void run() {
                     historyList = (ArrayList<HistoryItem>) historyDatabase.historyDao().getAllSearchHistory();
                     if (historyList.size() == 0) {
-                        fragmentTitle.setText(R.string.search_history_empty);
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fragmentTitle.setText(R.string.search_history_empty);
+                            }
+                        });
                     }
                     Collections.reverse(historyList);
                     adapter = new HistoryAdapter(getContext(), historyList);
