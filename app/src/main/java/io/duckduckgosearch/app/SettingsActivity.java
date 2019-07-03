@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -46,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
             setPreferencesFromResource(R.xml.settings_screen, rootKey);
             historyDatabase = Room.databaseBuilder(context, HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
                     .build();
