@@ -1,6 +1,7 @@
 package io.duckduckgosearch.app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         if (PrefManager.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark);
         }

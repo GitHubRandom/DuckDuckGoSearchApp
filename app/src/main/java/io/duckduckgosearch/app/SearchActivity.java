@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.room.Room;
 
@@ -48,6 +49,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         if (PrefManager.isDarkTheme(this)) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
             darkTheme = true;
