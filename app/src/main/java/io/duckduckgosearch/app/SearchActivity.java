@@ -78,12 +78,10 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         eraseTextButton = findViewById(R.id.erase_button);
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            if (bundle.containsKey("search_term")) {
-                intentSearchTerm = bundle.getString("search_term");
-                fromIntent = true;
-                search(intentSearchTerm);
-            }
+        if (bundle != null && bundle.containsKey("search_term")) {
+            intentSearchTerm = bundle.getString("search_term");
+            fromIntent = true;
+            search(intentSearchTerm);
         }
 
         if (darkTheme) {
