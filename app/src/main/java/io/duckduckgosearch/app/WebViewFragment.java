@@ -156,7 +156,7 @@ public class WebViewFragment extends Fragment {
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     webView.loadUrl(
-                            "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\")"
+                            "javascript:$(\".header--aside\").remove(); $(\"#header_wrapper\").css(\"padding-top\", \"0\"); $(\"#duckbar_dropdowns\").remove();"
                     );
                     if (addHistory) {
                         new Thread(new Runnable() {
