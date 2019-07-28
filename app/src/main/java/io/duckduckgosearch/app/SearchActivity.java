@@ -71,7 +71,6 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         progressBar = findViewById(R.id.search_progress);
 
         searchBar = findViewById(R.id.search_bar_edittext);
-        searchBar.setAnimation(null);
 
         adapterUpdate();
 
