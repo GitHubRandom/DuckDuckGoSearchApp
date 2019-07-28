@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,7 +18,6 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
 
 /**
  * This is a custom adapter for search suggestions list
@@ -34,6 +32,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
     private String[] filteredList;
     private String[] list;
     private ArrayList<String> suggestions;
+    private int historyCount;
 
     public interface OnItemClickListener {
         void onItemClickListener(String searchTerm);
@@ -51,6 +50,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
             filteredList = Arrays.copyOf(list, list.length, String[].class);
         }
         this.searchBar = searchBar;
+        historyCount = filteredList.length;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
                     @Override
                     public void onParsed(ArrayList<String> list) {
                         suggestions = list;
-                        if (filterResults == null || filterResults.values == null) {
+                        if (filterResults.values == null) {
                             if (suggestions != null && suggestions.size() != 0) {
                                 if (suggestions.size() < 5) {
                                     filteredList = Arrays.copyOf(suggestions.toArray(), suggestions.size(), String[].class);
@@ -140,6 +140,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
                     }
                 });
                 parser.execute(charSequence.toString());
+                historyCount = filterResults.count;
             }
         };
     }
@@ -192,9 +193,18 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
             }
         });
         ImageView icon = convertView.findViewById(R.id.auto_complete_item_icon);
+        if (position >= historyCount) {
+            icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_search_24px));
+        } else {
+            icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_history_24px));
+        }
         if (PrefManager.isDarkTheme(context)) {
             appendButton.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_top_left_arrow_white));
-            icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
+            if (position >= historyCount) {
+                icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_search_24px_white));
+            } else {
+                icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_outline_history_24px_white));
+            }
             root.setBackgroundColor(context.getResources().getColor(R.color.darkThemeColorPrimary));
         }
 
