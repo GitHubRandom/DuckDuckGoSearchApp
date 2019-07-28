@@ -53,6 +53,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
         historyCount = filteredList.length;
     }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         return new Filter() {
