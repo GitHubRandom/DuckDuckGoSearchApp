@@ -9,7 +9,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebViewClient;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,20 +16,20 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.room.Room;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 public class SearchActivity extends AppCompatActivity implements WebViewFragment.OnSearchTermChange,
         AutoCompleteAdapter.OnItemClickListener, WebViewFragment.OnWebViewError, ErrorFragment.OnReloadButtonClick,
         WebViewFragment.OnPageFinish {
 
-    AutoCompleteTextView searchBar;
+    DuckAutoCompleteTextView searchBar;
     FragmentManager fragmentManager;
     ProgressBar progressBar;
     Activity activity;
@@ -44,7 +43,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
     InputMethodManager manager;
     HistoryDatabase historyDatabase;
     boolean darkTheme;
-    boolean fromIntent;
+    boolean fromIntent = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +71,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         progressBar = findViewById(R.id.search_progress);
 
         searchBar = findViewById(R.id.search_bar_edittext);
+        searchBar.setAnimation(null);
 
         adapterUpdate();
 
@@ -188,6 +188,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
                     @Override
                     public void run() {
                         searchBar.setAdapter(adapter);
+                        ((AutoCompleteAdapter)searchBar.getAdapter()).getFilter().filter("");
                     }
                 });
             }

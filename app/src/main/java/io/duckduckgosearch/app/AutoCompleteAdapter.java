@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /**
  * This is a custom adapter for search suggestions list
@@ -28,22 +29,27 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
     private Context context;
     private int resId;
-    private AutoCompleteTextView searchBar;
+    private DuckAutoCompleteTextView searchBar;
     private OnItemClickListener clickListener;
     private String[] filteredList;
     private String[] list;
+    private ArrayList<String> suggestions;
 
     public interface OnItemClickListener {
         void onItemClickListener(String searchTerm);
     }
 
     AutoCompleteAdapter(@NonNull Context context, int resource,
-                        @NonNull String[] objects, AutoCompleteTextView searchBar) {
+                        @NonNull String[] objects, DuckAutoCompleteTextView searchBar) {
         super(context, resource, objects);
         this.context = context;
         resId = resource;
         list = objects;
-        filteredList = Arrays.copyOf(list, 5, String[].class);
+        if (list.length >= 5) {
+            filteredList = Arrays.copyOf(list, 5, String[].class);
+        } else {
+            filteredList = Arrays.copyOf(list, list.length, String[].class);
+        }
         this.searchBar = searchBar;
     }
 
@@ -61,9 +67,16 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
                     }
                 } else {
                     if (charSequence == null || charSequence.length() == 0) {
-                        synchronized (this) {
-                            results.values = Arrays.copyOf(list, 5, String[].class);
-                            results.count = 5;
+                        if (list.length < 5) {
+                            synchronized (this) {
+                                results.values = Arrays.copyOf(list, list.length, String[].class);
+                                results.count = list.length;
+                            }
+                        } else {
+                            synchronized (this) {
+                                results.values = Arrays.copyOf(list, 5, String[].class);
+                                results.count = 5;
+                            }
                         }
                     } else {
                         ArrayList<String> matchingTerms = new ArrayList<>();
@@ -90,19 +103,43 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
             }
 
             @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                if (filterResults == null) {
-                    filteredList = new String[]{};
-                    notifyDataSetInvalidated();
-                } else {
-                    filteredList = (String[]) filterResults.values;
-                    if (filterResults.count > 0) {
-                        notifyDataSetChanged();
-                    } else {
-                        notifyDataSetInvalidated();
+            protected void publishResults(CharSequence charSequence, final FilterResults filterResults) {
+                OnlineACParser parser = new OnlineACParser((String[])filterResults.values);
+                parser.setOnParseListener(new OnlineACParser.OnParsed() {
+                    @Override
+                    public void onParsed(ArrayList<String> list) {
+                        suggestions = list;
+                        if (filterResults == null || filterResults.values == null) {
+                            if (suggestions != null && suggestions.size() != 0) {
+                                if (suggestions.size() < 5) {
+                                    filteredList = Arrays.copyOf(suggestions.toArray(), suggestions.size(), String[].class);
+                                } else {
+                                    filteredList = Arrays.copyOf(suggestions.toArray(), 5, String[].class);
+                                }
+                            }
+                            filteredList = new String[]{};
+                            notifyDataSetInvalidated();
+                        } else {
+                            if (suggestions != null && suggestions.size() != 0) {
+                                ArrayList<String> finalList = new ArrayList<>(Arrays.asList((String[]) filterResults.values));
+                                if (filterResults.count < 5) {
+                                    for (int i = 0; i < 5 - filterResults.count; i++) {
+                                        finalList.add(suggestions.get(i));
+                                    }
+                                }
+                                filteredList = Arrays.copyOf(finalList.toArray(), finalList.size(), String[].class);
+                            } else {
+                                filteredList = (String[]) filterResults.values;
+                            }
+                            if (filteredList.length > 0) {
+                                notifyDataSetChanged();
+                            } else {
+                                notifyDataSetInvalidated();
+                            }
+                        }
                     }
-                }
-                Log.d("Filter", Arrays.toString(filteredList));
+                });
+                parser.execute(charSequence.toString());
             }
         };
     }

@@ -39,7 +39,7 @@
             android:transitionName="@string/search_bar_transition_name"
             android:background="@drawable/search_field_bg">
 
-            <AutoCompleteTextView
+            <io.duckduckgosearch.app.DuckAutoCompleteTextView
                 android:id="@+id/search_bar_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
