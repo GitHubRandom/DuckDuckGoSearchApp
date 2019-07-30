@@ -64,9 +64,11 @@ public class OnlineACParser extends AsyncTask<String, Void, ArrayList<String>> {
             suggestions = new JSONArray(JSONString);
             for (int i = 0; i < suggestions.length(); i++) {
                 boolean isInHistory = false;
-                for (String filterResult : filterResults) {
-                    if (filterResult.equals(suggestions.getJSONObject(i).getString("phrase"))) {
-                        isInHistory = true;
+                if (filterResults != null) {
+                    for (String filterResult : filterResults) {
+                        if (filterResult.equals(suggestions.getJSONObject(i).getString("phrase"))) {
+                            isInHistory = true;
+                        }
                     }
                 }
                 if (!isInHistory) {

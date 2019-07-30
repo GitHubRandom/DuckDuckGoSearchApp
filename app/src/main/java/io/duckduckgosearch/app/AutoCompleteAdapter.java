@@ -99,7 +99,6 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
                         }
                     }
                 }
-
                 return results;
             }
 
@@ -117,14 +116,22 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
                                 } else {
                                     filteredList = Arrays.copyOf(suggestions.toArray(), 5, String[].class);
                                 }
+                                notifyDataSetChanged();
+                            } else {
+                                filteredList = new String[]{};
+                                notifyDataSetInvalidated();
                             }
-                            filteredList = new String[]{};
-                            notifyDataSetInvalidated();
                         } else {
                             if (suggestions != null && suggestions.size() != 0) {
                                 ArrayList<String> finalList = new ArrayList<>(Arrays.asList((String[]) filterResults.values));
+                                int count = 5 - filterResults.count;
+                                if (count > suggestions.size()) {
+                                    count = suggestions.size();
+                                }
+                                Log.d("Debug : ", "Suggestions size : " + suggestions.size());
+                                Log.d("Debug : ", "Difference : " + count);
                                 if (filterResults.count < 5) {
-                                    for (int i = 0; i < 5 - filterResults.count; i++) {
+                                    for (int i = 0; i < count; i++) {
                                         finalList.add(suggestions.get(i));
                                     }
                                 }
