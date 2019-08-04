@@ -33,6 +33,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
     private String[] list;
     private ArrayList<String> suggestions;
     private int historyCount;
+    private OnlineACParser parser;
 
     public interface OnItemClickListener {
         void onItemClickListener(String searchTerm);
@@ -104,7 +105,10 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> {
 
             @Override
             protected void publishResults(CharSequence charSequence, final FilterResults filterResults) {
-                OnlineACParser parser = new OnlineACParser((String[])filterResults.values);
+                if (parser != null && !parser.isCancelled()) {
+                    parser.cancel(true);
+                }
+                parser = new OnlineACParser((String[])filterResults.values);
                 parser.setOnParseListener(new OnlineACParser.OnParsed() {
                     @Override
                     public void onParsed(ArrayList<String> list) {
