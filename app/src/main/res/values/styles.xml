@@ -16,8 +16,9 @@
 
     <style name="AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dark">
         <item name="colorPrimary">@color/darkThemeColorPrimary</item>
-        <item name="colorPrimaryDark">@color/darkThemeColorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/darkThemeColorPrimary</item>
         <item name="colorAccent">@color/darkThemeColorAccent</item>
+        <item name="android:windowBackground">@color/darkThemeColorPrimary</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="alertDialogTheme">@style/ListPreferenceStyle</item>
