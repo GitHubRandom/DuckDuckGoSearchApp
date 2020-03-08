@@ -2,6 +2,7 @@ package io.duckduckgosearch.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
         searchBarRoot = findViewById(R.id.search_bar_edittext_root);
 
         progressBar = findViewById(R.id.search_progress);
+        progressBar.setVisibility(View.GONE);
 
         searchBar = findViewById(R.id.search_bar_edittext);
 
@@ -228,6 +230,9 @@ public class SearchActivity extends AppCompatActivity implements WebViewFragment
 
     @Override
     public void onReloadButtonClick() {
+        if (latestTerm.equals("")) {
+            latestTerm = searchBar.getText().toString();
+        }
         search(latestTerm);
     }
 
