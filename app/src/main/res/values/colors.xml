@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#c6c6c6</color>
     <color name="colorAccent">#de5833</color>
     <color name="colorSearchFieldBorder">#cccccc</color>
-    <color name="darkThemeColorPrimary">#333</color>
-    <color name="darkThemeColorPrimaryDark">#333</color>
+    <color name="darkThemeColorPrimary">#161616</color>
+    <color name="darkThemeColorPrimaryDark">#161616</color>
     <color name="darkThemeColorAccent">#8c9eff</color>
     <color name="darkThemeColorSearchFieldBg">#292929</color>
     <color name="darkThemeColorSearchFieldBorder">#242424</color>

@@ -52,9 +52,10 @@ public class SettingsActivity extends AppCompatActivity {
             historyDatabase = Room.databaseBuilder(context, HistoryDatabase.class, HistoryFragment.HISTORY_DB_NAME)
                     .build();
             aboutPreference = findPreference("about_app");
-            aboutPreference.setIntent(new Intent(getActivity(), AboutActivity.class));
-
-            themePreference = (ListPreference) findPreference("search_theme");
+            if (aboutPreference != null) {
+                aboutPreference.setIntent(new Intent(getActivity(), AboutActivity.class));
+            }
+            themePreference = findPreference("search_theme");
             switch (PrefManager.getTheme(context)) {
                 case "default":
                     themePreference.setSummary("Default");
@@ -105,37 +106,39 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             deleteHistoryPreference = findPreference("delete_search_history");
-            deleteHistoryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                    dialog.setTitle(context.getResources().getString(R.string.settings_delete_search_history_dialog_title));
-                    dialog.setMessage(context.getResources().getString(R.string.settings_delete_search_history_dialog_message));
-                    dialog.setPositiveButton(R.string.settings_delete_search_history_dialog_positive_btn,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            historyDatabase.clearAllTables();
-                                        }
-                                    }).start();
-                                }
-                    });
-                    dialog.setNegativeButton(R.string.settings_delete_search_history_dialog_negative_btn,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    dialog.show();
-                    return true;
-                }
-            });
+            if (deleteHistoryPreference != null) {
+                deleteHistoryPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                        dialog.setTitle(context.getResources().getString(R.string.settings_delete_search_history_dialog_title));
+                        dialog.setMessage(context.getResources().getString(R.string.settings_delete_search_history_dialog_message));
+                        dialog.setPositiveButton(R.string.settings_delete_search_history_dialog_positive_btn,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                historyDatabase.clearAllTables();
+                                            }
+                                        }).start();
+                                    }
+                                });
+                        dialog.setNegativeButton(R.string.settings_delete_search_history_dialog_negative_btn,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        dialog.show();
+                        return true;
+                    }
+                });
+            }
 
-            searchWidgetTheme = (ListPreference) findPreference("search_widget_theme");
+            searchWidgetTheme = findPreference("search_widget_theme");
             String searchWidgetThemeValue = PrefManager.getSearchWidgetTheme(context);
             searchWidgetTheme.setSummary(searchWidgetThemeValue.substring(0,1).toUpperCase() + searchWidgetThemeValue.substring(1));
             searchWidgetTheme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -154,7 +157,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
-            safeSearch = (ListPreference) findPreference("safe_search");
+            safeSearch = findPreference("safe_search");
             String safeSearchValue = PrefManager.getSafeSearchLevel(context);
             safeSearch.setSummary(safeSearchValue.substring(0,1).toUpperCase() + safeSearchValue.substring(1));
             safeSearch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
