@@ -17,6 +17,7 @@ public class HistoryItem {
     @ColumnInfo(name = "search_date")
     Date searchDate;
 
+    @NonNull
     String getSearchTerm() {
         return searchTerm;
     }
