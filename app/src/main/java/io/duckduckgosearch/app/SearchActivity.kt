@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.room.Room
 import io.duckduckgosearch.app.ErrorFragment.OnReloadButtonClick
 import io.duckduckgosearch.app.WebViewFragment.*
+import io.duckduckgosearch.app.WebViewFragment.Companion.newInstance
 import java.util.*
 
 class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdapter.OnItemClickListener, OnWebViewError, OnReloadButtonClick, OnPageFinish {
@@ -122,7 +123,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         }
     }
 
-    override fun onSearchTermChange(searchTerm: String) {
+    override fun onSearchTermChange(searchTerm: String?) {
         searchBar!!.setText(searchTerm)
     }
 
@@ -141,10 +142,10 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
             historyArrayList.reverse()
             val historyArrayListStrings = ArrayList<String>()
             for (item in historyArrayList) {
-                historyArrayListStrings.add(item!!.getSearchTerm())
+                historyArrayListStrings.add(item!!.searchTerm)
             }
             val historyArray = Arrays.copyOf<String, Any>(historyArrayListStrings.toTypedArray(), historyArrayList.size, Array<String>::class.java)
-            adapter = AutoCompleteAdapter(this@SearchActivity, R.layout.auto_complete_item, historyArray, searchBar)
+            adapter = AutoCompleteAdapter(this@SearchActivity, R.layout.auto_complete_item, historyArray, searchBar!!)
             activity!!.runOnUiThread {
                 searchBar!!.setAdapter(adapter)
                 (searchBar!!.adapter as AutoCompleteAdapter).filter.filter("")
@@ -168,7 +169,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
     }
 
-    override fun onItemClickListener(searchTerm: String) {
+    override fun onItemClickListener(searchTerm: String?) {
         search(searchTerm)
     }
 
