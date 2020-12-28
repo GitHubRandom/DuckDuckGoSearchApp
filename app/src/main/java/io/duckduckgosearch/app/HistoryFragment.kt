@@ -30,7 +30,7 @@ class HistoryFragment : BottomSheetDialogFragment() {
                     (context as Activity?)!!.runOnUiThread { fragmentTitle.setText(R.string.search_history_empty) }
                 }
                 historyList.reverse()
-                val adapter = HistoryAdapter(context, historyList)
+                val adapter = HistoryAdapter(requireContext(), historyList)
                 (context as Activity?)!!.runOnUiThread { historyListRv.adapter = adapter }
             }.start()
         } else {

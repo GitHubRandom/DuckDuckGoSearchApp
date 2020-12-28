@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity() {
         var aboutPreference: Preference? = null
         var historyDatabase: HistoryDatabase? = null
 
-        override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
             setPreferencesFromResource(R.xml.settings_screen, rootKey)
             historyDatabase = Room.databaseBuilder(requireContext(), HistoryDatabase::class.java, HistoryFragment.HISTORY_DB_NAME)
@@ -104,7 +104,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             searchWidgetTheme = findPreference("search_widget_theme")
             val searchWidgetThemeValue = PrefManager.getSearchWidgetTheme(context)
-            searchWidgetTheme!!.summary = searchWidgetThemeValue.substring(0, 1).toUpperCase(Locale.getDefault()) + searchWidgetThemeValue.substring(1)
+            searchWidgetTheme!!.summary = searchWidgetThemeValue?.substring(0, 1)?.toUpperCase(Locale.getDefault()) + searchWidgetThemeValue?.substring(1)
             searchWidgetTheme!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                 val newValueC = newValue.toString().substring(0, 1).toUpperCase(Locale.getDefault()) +
                         newValue.toString().substring(1)
@@ -119,7 +119,7 @@ class SettingsActivity : AppCompatActivity() {
             }
             safeSearch = findPreference("safe_search")
             val safeSearchValue = PrefManager.getSafeSearchLevel(context)
-            safeSearch!!.summary = safeSearchValue.substring(0, 1).toUpperCase(Locale.getDefault()) + safeSearchValue.substring(1)
+            safeSearch!!.summary = safeSearchValue?.substring(0, 1)?.toUpperCase(Locale.getDefault()) + safeSearchValue?.substring(1)
             safeSearch!!.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
                 val newValueC = newValue.toString().substring(0, 1).toUpperCase(Locale.getDefault()) +
                         newValue.toString().substring(1)
