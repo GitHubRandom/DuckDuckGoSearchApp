@@ -1,6 +1,7 @@
 package io.duckduckgosearch.app
 
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
 import android.widget.TextView.OnEditorActionListener
@@ -23,6 +25,8 @@ import io.duckduckgosearch.app.WebViewFragment.Companion.newInstance
 import java.util.*
 
 class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdapter.OnItemClickListener, OnWebViewError, OnReloadButtonClick, OnPageFinish {
+
+    // Views initialization
     private lateinit var searchBar: DuckAutoCompleteTextView
     private lateinit var fragmentManager: FragmentManager
     private lateinit var progressBar: ProgressBar
@@ -38,6 +42,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
     private lateinit var historyDatabase: HistoryDatabase
     private var darkTheme = false
     private var fromIntent = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -45,6 +50,12 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
             setTheme(R.style.AppTheme_Dark_NoActionBar)
             darkTheme = true
         }
+
+        // Enable WebView debugging from PC (Chrome)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
+
         setContentView(R.layout.activity_search)
         historyDatabase = Room.databaseBuilder(this, HistoryDatabase::class.java, HistoryFragment.HISTORY_DB_NAME)
                 .build()
