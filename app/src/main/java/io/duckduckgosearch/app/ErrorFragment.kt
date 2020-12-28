@@ -1,51 +1,33 @@
-package io.duckduckgosearch.app;
+package io.duckduckgosearch.app
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+class ErrorFragment : Fragment() {
+    private var reloadButtonClick: OnReloadButtonClick? = null
 
-public class ErrorFragment extends Fragment {
-
-    private Context context;
-    private OnReloadButtonClick reloadButtonClick;
-
-    @Override
-    public void onAttach(Context context) {
-        this.context = context;
-        super.onAttach(context);
+    interface OnReloadButtonClick {
+        fun onReloadButtonClick()
     }
 
-    public interface OnReloadButtonClick {
-        void onReloadButtonClick();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search_error, container, false);
-        Button reload = view.findViewById(R.id.reload_button);
-        reload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reloadButtonClick = (OnReloadButtonClick) context;
-                reloadButtonClick.onReloadButtonClick();
-            }
-        });
-
-        if (PrefManager.isDarkTheme(getContext())) {
-            ((TextView) view.findViewById(R.id.error_text)).setTextColor(getResources().getColor(android.R.color.white));
-            reload.setTextColor(getResources().getColor(R.color.darkThemeColorAccent));
-            reload.setBackground(getResources().getDrawable(R.drawable.retry_button_bg_white));
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_search_error, container, false)
+        val reload = view.findViewById<Button>(R.id.reload_button)
+        reload.setOnClickListener {
+            reloadButtonClick = context as OnReloadButtonClick?
+            reloadButtonClick!!.onReloadButtonClick()
         }
-
-        return view;
+        if (PrefManager.isDarkTheme(context)) {
+            view.findViewById<TextView>(R.id.error_text).setTextColor(ResourcesCompat.getColor(resources,android.R.color.white,null))
+            reload.setTextColor(ResourcesCompat.getColor(resources, R.color.darkThemeColorAccent, null))
+            reload.background = ResourcesCompat.getDrawable(resources, R.drawable.retry_button_bg_white, null)
+        }
+        return view
     }
 }
