@@ -8,7 +8,7 @@
         </shape>
     </item>
 
-    <item android:drawable="@drawable/ic_duckduckgo_logo"
+    <item android:drawable="@drawable/duckduckgo_logo"
         android:gravity="center_vertical|left"
         android:top="0dp"
         android:bottom="0dp"

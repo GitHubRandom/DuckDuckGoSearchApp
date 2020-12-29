@@ -23,9 +23,9 @@ class HistoryFragment : BottomSheetDialogFragment() {
         val fragmentTitle = view.findViewById<TextView>(R.id.history_fragment_title)
         val historyListRv = view.findViewById<RecyclerView>(R.id.history_fragment_list)
         historyListRv.setHasFixedSize(true)
-        if (PrefManager.isHistoryEnabled(context)) {
+        if (PrefManager.isHistoryEnabled(requireContext())) {
             Thread {
-                val historyList = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem?>
+                val historyList = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem>
                 if (historyList.size == 0) {
                     (context as Activity?)!!.runOnUiThread { fragmentTitle.setText(R.string.search_history_empty) }
                 }
@@ -41,7 +41,7 @@ class HistoryFragment : BottomSheetDialogFragment() {
         val animator = DefaultItemAnimator()
         historyListRv.itemAnimator = animator
         historyListRv.layoutManager = manager
-        if (PrefManager.isDarkTheme(context)) {
+        if (PrefManager.isDarkTheme(requireContext())) {
             root.background = ResourcesCompat.getDrawable(resources, R.drawable.history_fragment_bg_dark, null)
             fragmentTitle.setTextColor(ResourcesCompat.getColor(resources,R.color.colorPrimary,null))
             dragIcon.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_round_drag_handle_24px_dark, null))

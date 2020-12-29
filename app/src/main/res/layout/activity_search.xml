@@ -18,7 +18,8 @@
         android:layout_weight="0"
         android:orientation="horizontal"
         android:animateLayoutChanges="true"
-        android:padding="10dp">
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
 
         <ImageView
             android:id="@+id/duck_logo"
@@ -28,7 +29,7 @@
             android:layout_marginEnd="10dp"
             android:contentDescription="@string/app_name"
             android:visibility="gone"
-            app:srcCompat="@drawable/ic_duckduckgo_logo"
+            app:srcCompat="@drawable/duckduckgo_logo"
             tools:ignore="NestedWeights" />
 
         <RelativeLayout
@@ -37,7 +38,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/search_field_bg">
-
 
             <io.duckduckgosearch.app.DuckAutoCompleteTextView
                 android:id="@+id/search_bar_edittext"
@@ -52,6 +52,7 @@
                 android:imeOptions="actionDone"
                 android:hint="@string/search_hint"
                 android:inputType="text"
+                android:gravity="center_vertical"
                 android:dropDownVerticalOffset="0dp"
                 android:popupBackground="@android:color/transparent"
                 android:singleLine="true" />

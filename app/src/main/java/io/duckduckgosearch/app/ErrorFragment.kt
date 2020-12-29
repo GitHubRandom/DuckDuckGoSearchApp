@@ -23,7 +23,7 @@ class ErrorFragment : Fragment() {
             reloadButtonClick = context as OnReloadButtonClick?
             reloadButtonClick!!.onReloadButtonClick()
         }
-        if (PrefManager.isDarkTheme(context)) {
+        if (PrefManager.isDarkTheme(requireContext())) {
             view.findViewById<TextView>(R.id.error_text).setTextColor(ResourcesCompat.getColor(resources,android.R.color.white,null))
             reload.setTextColor(ResourcesCompat.getColor(resources, R.color.darkThemeColorAccent, null))
             reload.background = ResourcesCompat.getDrawable(resources, R.drawable.retry_button_bg_white, null)

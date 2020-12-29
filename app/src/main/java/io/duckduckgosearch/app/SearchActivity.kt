@@ -3,6 +3,8 @@ package io.duckduckgosearch.app
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
@@ -34,7 +36,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
     private lateinit var duckLogo: ImageView
     private lateinit var eraseTextButton: ImageButton
     private lateinit var searchBarRoot: RelativeLayout
-    private var latestTerm: String? = ""
+    private var latestTerm: String = ""
     private lateinit var intentSearchTerm: String
     private var webViewFragment: WebViewFragment? = null
     private var adapter: AutoCompleteAdapter? = null
@@ -75,13 +77,9 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
             fromIntent = true
             search(intentSearchTerm)
         }
-        if (darkTheme) {
-            findViewById<View>(R.id.frame_layout).setBackgroundColor(
-                    ResourcesCompat.getColor(resources,R.color.darkThemeColorPrimary,null))
-            eraseTextButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_outline_close_24px_white))
-        }
         if (savedInstanceState == null && !fromIntent) {
             searchBar.requestFocus()
+            eraseTextButton.visibility = View.GONE
         } else {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             if (!searchBar.hasFocus()) {
@@ -97,6 +95,18 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
                 return@OnEditorActionListener true
             }
             false
+        })
+        searchBar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString() == "") {
+                    eraseTextButton.visibility = View.GONE
+                } else if (eraseTextButton.visibility == View.GONE) {
+                    eraseTextButton.visibility = View.VISIBLE
+                }
+            }
         })
         searchBar.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -131,6 +141,12 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
             findViewById<View>(R.id.search_bar_root).setBackgroundColor(
                     ResourcesCompat.getColor(resources,R.color.darkThemeColorPrimary,null))
             searchBarRoot.background = AppCompatResources.getDrawable(this, R.drawable.search_field_bg_dark)
+            findViewById<View>(R.id.frame_layout).setBackgroundColor(
+                    ResourcesCompat.getColor(resources,R.color.darkThemeColorPrimary,null))
+            eraseTextButton.setImageDrawable(
+                    AppCompatResources.getDrawable(this, R.drawable.ic_outline_close_24px_white))
+            findViewById<ImageView>(R.id.duck_logo).setImageDrawable(
+                    AppCompatResources.getDrawable(this,R.drawable.duckduckgo_white_logo))
         }
     }
 
@@ -149,11 +165,11 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
 
     private fun adapterUpdate() {
         Thread {
-            val historyArrayList = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem?>
+            val historyArrayList = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem>
             historyArrayList.reverse()
             val historyArrayListStrings = ArrayList<String>()
             for (item in historyArrayList) {
-                historyArrayListStrings.add(item!!.searchTerm)
+                historyArrayListStrings.add(item.searchTerm)
             }
             val historyArray = Arrays.copyOf<String, Any>(historyArrayListStrings.toTypedArray(), historyArrayList.size, Array<String>::class.java)
             adapter = AutoCompleteAdapter(this@SearchActivity, R.layout.auto_complete_item, historyArray, searchBar)
@@ -164,9 +180,9 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         }.start()
     }
 
-    private fun search(searchTerm: String?) {
+    private fun search(searchTerm: String) {
         progressBar.visibility = View.VISIBLE
-        webViewFragment = newInstance(searchTerm!!, PrefManager.isHistoryEnabled(this))
+        webViewFragment = newInstance(searchTerm, PrefManager.isHistoryEnabled(this))
         latestTerm = searchTerm
         if (fromIntent) {
             searchBar.setText(latestTerm)
@@ -180,7 +196,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
     }
 
-    override fun onItemClickListener(searchTerm: String?) {
+    override fun onItemClickListener(searchTerm: String) {
         search(searchTerm)
     }
 

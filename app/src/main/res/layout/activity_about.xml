@@ -13,7 +13,7 @@
         android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/ic_duckduckgo_logo"
+        app:srcCompat="@drawable/duckduckgo_logo"
         tools:ignore="ContentDescription" />
 
     <TextView

@@ -55,6 +55,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, OnLastTermDelete
                     ResourcesCompat.getColor(this.resources,android.R.color.white,null))
             (findViewById<View>(R.id.search_history_button_icon) as ImageView).setImageDrawable(
                     AppCompatResources.getDrawable(this,R.drawable.ic_outline_keyboard_arrow_up_24px_white))
+            findViewById<ImageView>(R.id.duck_logo).setImageDrawable(
+                    AppCompatResources.getDrawable(this,R.drawable.duckduckgo_logo_vertical_white))
         }
     }
 

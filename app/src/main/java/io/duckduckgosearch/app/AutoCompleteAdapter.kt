@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import io.duckduckgosearch.app.OnlineACParser.OnParsed
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * This is a custom adapter for search suggestions list
@@ -17,22 +18,22 @@ import java.util.*
 class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
                                                objects: Array<String>, searchBar: DuckAutoCompleteTextView) : ArrayAdapter<String>(context, resId, objects) {
     private val searchBar: DuckAutoCompleteTextView
-    private var clickListener: OnItemClickListener? = null
-    private var filteredList: Array<String>?
-    private val list: Array<String>?
-    private var suggestions: ArrayList<String>? = null
+    private lateinit var clickListener: OnItemClickListener
+    private var filteredList: Array<String>
+    private val list: Array<String> = objects
+    private lateinit var suggestions: ArrayList<String>
     private var historyCount: Int
     private var parser: OnlineACParser? = null
 
     interface OnItemClickListener {
-        fun onItemClickListener(searchTerm: String?)
+        fun onItemClickListener(searchTerm: String)
     }
 
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(charSequence: CharSequence): FilterResults {
                 val results = FilterResults()
-                if (list == null || list.isEmpty()) {
+                if (list.isEmpty()) {
                     synchronized(this) {
                         results.values = null
                         results.count = 0
@@ -74,19 +75,19 @@ class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
             }
 
             override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
-                if (parser != null && !parser!!.isCancelled) {
-                    parser!!.cancel(true)
+                if (parser != null && !parser?.isCancelled!!) {
+                    parser?.cancel(true)
                 }
                 parser = OnlineACParser(filterResults.values as Array<String>?)
-                parser!!.setOnParseListener(object : OnParsed {
+                parser?.setOnParseListener(object : OnParsed {
                     override fun onParsed(list: ArrayList<String>?) {
-                        suggestions = list
+                        suggestions = list ?: arrayListOf()
                         if (filterResults.values == null) {
-                            if (suggestions != null && suggestions!!.size != 0) {
-                                filteredList = if (suggestions!!.size < 5) {
-                                    Arrays.copyOf<String, Any>(suggestions!!.toTypedArray(), suggestions!!.size, Array<String>::class.java)
+                            if (suggestions.size != 0) {
+                                filteredList = if (suggestions.size < 5) {
+                                    Arrays.copyOf<String, Any>(suggestions.toTypedArray(), suggestions.size, Array<String>::class.java)
                                 } else {
-                                    Arrays.copyOf<String, Any>(suggestions!!.toTypedArray(), 5, Array<String>::class.java)
+                                    Arrays.copyOf<String, Any>(suggestions.toTypedArray(), 5, Array<String>::class.java)
                                 }
                                 notifyDataSetChanged()
                             } else {
@@ -94,24 +95,22 @@ class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
                                 notifyDataSetInvalidated()
                             }
                         } else {
-                            if (suggestions != null && suggestions!!.size != 0) {
-                                val finalList: ArrayList<String> = ArrayList(listOf(*filterResults.values as Array<String?>))
+                            if (suggestions.size != 0) {
+                                val finalList: ArrayList<String> = ArrayList(listOf(*filterResults.values as Array<String>))
                                 var count: Int = 5 - filterResults.count
-                                if (count > suggestions!!.size) {
-                                    count = suggestions!!.size
+                                if (count > suggestions.size) {
+                                    count = suggestions.size
                                 }
-                                Log.d("Debug : ", "Suggestions size : " + suggestions!!.size)
-                                Log.d("Debug : ", "Difference : $count")
                                 if (filterResults.count < 5) {
                                     for (i in 0 until count) {
-                                        finalList.add(suggestions!![i])
+                                        finalList.add(suggestions[i])
                                     }
                                 }
                                 filteredList = Arrays.copyOf<String, Any>(finalList.toTypedArray(), finalList.size, Array<String>::class.java)
                             } else {
-                                filteredList = filterResults.values as Array<String>?
+                                filteredList = filterResults.values as Array<String>
                             }
-                            if (filteredList!!.isNotEmpty()) {
+                            if (filteredList.isNotEmpty()) {
                                 notifyDataSetChanged()
                             } else {
                                 notifyDataSetInvalidated()
@@ -119,22 +118,18 @@ class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
                         }
                     }
                 })
-                parser!!.execute(charSequence.toString())
+                parser?.execute(charSequence.toString())
                 historyCount = filterResults.count
             }
         }
     }
 
     override fun getItem(position: Int): String {
-        return filteredList!![position]
+        return filteredList[position]
     }
 
     override fun getCount(): Int {
-        return if (filteredList != null) {
-            filteredList!!.size
-        } else {
-            0
-        }
+        return filteredList.size
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -152,8 +147,8 @@ class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
         val root: RelativeLayout = cView.findViewById(R.id.auto_complete_item_root)
         root.setOnClickListener {
             try {
-                clickListener = context as OnItemClickListener?
-                clickListener!!.onItemClickListener(getItem(pos))
+                clickListener = context as OnItemClickListener
+                clickListener.onItemClickListener(getItem(pos))
                 searchBar.setText(getItem(pos))
             } catch (e: ClassCastException) {
                 Log.e("AutoCompleteAdapter", "You must implement the clickListenerInterface")
@@ -180,13 +175,12 @@ class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
     }
 
     init {
-        list = objects
         filteredList = if (list.size >= 5) {
             Arrays.copyOf(list, 5, Array<String>::class.java)
         } else {
             Arrays.copyOf(list, list.size, Array<String>::class.java)
         }
         this.searchBar = searchBar
-        historyCount = (filteredList as Array<String>).size
+        historyCount = filteredList.size
     }
 }

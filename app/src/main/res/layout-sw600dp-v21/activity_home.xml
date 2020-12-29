@@ -18,10 +18,10 @@
 
         <ImageView
             android:id="@+id/duck_logo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/ic_duckduckgo_logo"
+            app:srcCompat="@drawable/duckduckgo_logo_vertical"
             android:layout_marginBottom="15dp"/>
 
         <RelativeLayout

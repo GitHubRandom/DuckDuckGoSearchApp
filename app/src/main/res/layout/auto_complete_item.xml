@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         app:srcCompat="@drawable/ic_outline_history_24px"
         android:layout_centerVertical="true"
-        android:padding="10dp"
+        android:paddingHorizontal="10dp"
         tools:ignore="ContentDescription" />
 
     <TextView

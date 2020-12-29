@@ -19,8 +19,8 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HistoryAdapter internal constructor(private val context: Context, list: ArrayList<HistoryItem?>?) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
-    private var list: ArrayList<HistoryItem?>? = null
+class HistoryAdapter internal constructor(private val context: Context, list: ArrayList<HistoryItem>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+    private var list: ArrayList<HistoryItem>
     private val historyDatabase: HistoryDatabase
     private var onLastTermDeleted: OnLastTermDeleted? = null
 
@@ -41,9 +41,9 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
             holder.deleteButton.setImageDrawable(
                     ResourcesCompat.getDrawable(context.resources,R.drawable.ic_outline_delete_forever_24px_white,null))
         }
-        val searchTerm = list!![position]?.searchTerm
-        holder.term.text = list!![position]?.searchTerm
-        holder.date.text = calculatePastTime(list!![position]?.searchDate)
+        val searchTerm = list[position].searchTerm
+        holder.term.text = list[position].searchTerm
+        holder.date.text = calculatePastTime(list[position].searchDate)
         holder.root.setOnClickListener {
             val searchIntent = Intent(context, SearchActivity::class.java)
             val bundle = Bundle()
@@ -56,9 +56,9 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
                 if (itemCount == 1) {
                     onLastTermDeleted!!.onLastTermDeleted()
                 }
-                historyDatabase.historyDao().delete(list!![position])
-                list = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem?>
-                list!!.reverse()
+                historyDatabase.historyDao().delete(list[position])
+                list = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem>
+                list.reverse()
                 (context as Activity).runOnUiThread {
                     notifyItemRemoved(position)
                     notifyItemRangeChanged(position, itemCount)
@@ -68,9 +68,7 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
     }
 
     override fun getItemCount(): Int {
-        return if (list != null) {
-            list!!.size
-        } else 0
+        return list.size
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -133,9 +131,7 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
     }
 
     init {
-        if (list != null) {
-            this.list = list
-        }
+        this.list = list
         historyDatabase = Room.databaseBuilder(context, HistoryDatabase::class.java, HistoryFragment.HISTORY_DB_NAME).build()
     }
 }
