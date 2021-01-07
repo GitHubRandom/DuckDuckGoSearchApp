@@ -18,6 +18,8 @@ import java.util.*
 class SettingsActivity : AppCompatActivity(),SettingsFragment.OnChangeTheme {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(PrefManager.getThemeInt(this))
+        this.transparentStatusBar()
         supportFragmentManager.commit {
             replace(android.R.id.content, SettingsFragment())
         }
