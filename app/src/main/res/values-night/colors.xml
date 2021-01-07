@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#161616</color>
+    <color name="colorPrimaryDark">#161616</color>
+    <color name="colorAccent">#8c9eff</color>
+    <color name="colorSearchFieldBg">#292929</color>
+    <color name="colorSearchFieldBorder">#242424</color>
+    <color name="dialogBackground">@color/colorPrimary</color>
+</resources>

@@ -3,9 +3,7 @@
     <color name="colorPrimary">#fafafa</color>
     <color name="colorPrimaryDark">#c6c6c6</color>
     <color name="colorAccent">#de5833</color>
+    <color name="colorSearchFieldBg">@android:color/white</color>
     <color name="colorSearchFieldBorder">#cccccc</color>
-    <color name="darkThemeColorPrimary">#161616</color>
-    <color name="darkThemeColorAccent">#8c9eff</color>
-    <color name="darkThemeColorSearchFieldBg">#292929</color>
-    <color name="darkThemeColorSearchFieldBorder">#242424</color>
+    <color name="dialogBackground">@color/colorPrimary</color>
 </resources>

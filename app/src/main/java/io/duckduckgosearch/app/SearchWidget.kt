@@ -23,11 +23,7 @@ class SearchWidget : AppWidgetProvider() {
             val intent = Intent(context, SearchActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
             val pendingIntent = PendingIntent.getActivity(context, 1 + appWidgetId, intent, 0)
-            val views: RemoteViews = if (!PrefManager.isSearchWidgetDark(context)) {
-                RemoteViews(context.packageName, R.layout.search_widget)
-            } else {
-                RemoteViews(context.packageName, R.layout.search_widget_dark)
-            }
+            val views = RemoteViews(context.packageName, R.layout.search_widget)
             views.setOnClickPendingIntent(R.id.search_widget_root, pendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="settings_theme_entries" tools:ignore="InconsistentArrays">
+        <item>Follow system</item>
+        <item>Default (Light)</item>
+        <item>Basic (Light)</item>
+        <item>Gray (Light)</item>
+        <item>Dark</item>
+        <item>Set by battery saver</item>
+    </string-array>
+    <string-array name="settings_theme_values" tools:ignore="InconsistentArrays">
+        <item>follow</item>
+        <item>default</item>
+        <item>basic</item>
+        <item>gray</item>
+        <item>dark</item>
+        <item>battery</item>
+    </string-array>
+</resources>

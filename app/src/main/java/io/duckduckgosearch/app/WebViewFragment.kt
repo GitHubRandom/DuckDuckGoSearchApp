@@ -10,20 +10,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import androidx.room.Room
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
 
 class WebViewFragment : Fragment() {
+
     private var data: String = ""
     private var addHistory = false
     private lateinit var webView: WebView
-    private lateinit var historyDatabase: HistoryDatabase
+    private var historyDatabase: HistoryDatabase? = null
     private lateinit var cookieManager: CookieManager
 
     interface OnPageFinish {
@@ -41,8 +41,7 @@ class WebViewFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_web_view, container, false)
-        historyDatabase = Room.databaseBuilder(requireContext(), HistoryDatabase::class.java, HistoryFragment.HISTORY_DB_NAME)
-                .build()
+        historyDatabase = HistoryDatabase.getHistoryDatabase(requireContext())
         if (arguments != null) {
             data = requireArguments().getString("data","")
             addHistory = requireArguments().getBoolean("add_history")
@@ -54,9 +53,6 @@ class WebViewFragment : Fragment() {
 
         webView = view.findViewById(R.id.search_web_view)
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        if (PrefManager.isDarkTheme(requireContext())) {
-            webView.setBackgroundColor(ResourcesCompat.getColor(resources,R.color.darkThemeColorPrimary,null))
-        }
         webView.visibility = View.INVISIBLE
         webView.settings.javaScriptEnabled = true
 
@@ -79,7 +75,7 @@ class WebViewFragment : Fragment() {
                     )
                     if (addHistory) {
                         Thread {
-                            historyDatabase.historyDao().insertAll(HistoryItem(data.trim(), Calendar.getInstance().time))
+                            historyDatabase?.historyDao()?.insertAll(HistoryItem(data.trim(), Calendar.getInstance().time))
                             onPageFinish.onPageFinish()
                         }.start()
                     }
@@ -122,7 +118,7 @@ class WebViewFragment : Fragment() {
                     )
                     if (addHistory) {
                         Thread {
-                            historyDatabase.historyDao().insertAll(HistoryItem(data.trim(), Calendar.getInstance().time))
+                            historyDatabase?.historyDao()?.insertAll(HistoryItem(data.trim(), Calendar.getInstance().time))
                             onPageFinish.onPageFinish()
                         }.start()
                     }
@@ -167,7 +163,7 @@ class WebViewFragment : Fragment() {
 
     private fun setCookies() {
         cookieManager.setCookie(SEARCH_DOMAIN, "o=-1;")
-        when (PrefManager.getTheme(requireContext())) {
+        when (PrefManager.getSearchTheme(requireContext())) {
             "default" -> cookieManager.setCookie(SEARCH_DOMAIN, DEFAULT_COOKIE)
             "basic" -> cookieManager.setCookie(SEARCH_DOMAIN, BASIC_COOKIE)
             "gray" -> cookieManager.setCookie(SEARCH_DOMAIN, GRAY_COOKIE)
@@ -203,6 +199,7 @@ class WebViewFragment : Fragment() {
 
     companion object {
 
+        val TAG: String = WebViewFragment::class.simpleName.toString()
         private const val SEARCH_DOMAIN = "https://duckduckgo.com"
         private const val SEARCH_URL = "https://duckduckgo.com/?q="
         private const val DEFAULT_COOKIE = "ae=-1;"
@@ -212,9 +209,10 @@ class WebViewFragment : Fragment() {
 
         fun newInstance(data: String, addHistory: Boolean): WebViewFragment {
             val webViewFragment = WebViewFragment()
-            val bundle = Bundle()
-            bundle.putString("data", data)
-            bundle.putBoolean("add_history", addHistory)
+            val bundle = bundleOf(
+                    "data" to data,
+                    "add_history" to addHistory
+            )
             webViewFragment.arguments = bundle
             return webViewFragment
         }

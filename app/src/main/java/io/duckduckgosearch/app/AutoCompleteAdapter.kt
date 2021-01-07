@@ -160,15 +160,6 @@ class AutoCompleteAdapter constructor(context: Context, private val resId: Int,
         } else {
             icon.setImageDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.ic_outline_history_24px,null))
         }
-        if (PrefManager.isDarkTheme(context)) {
-            appendButton.setImageDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.ic_outline_top_left_arrow_white,null))
-            if (position >= historyCount) {
-                icon.setImageDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.ic_search_24px_white,null))
-            } else {
-                icon.setImageDrawable(ResourcesCompat.getDrawable(context.resources,R.drawable.ic_outline_history_24px_white,null))
-            }
-            root.setBackgroundColor(ResourcesCompat.getColor(context.resources,R.color.darkThemeColorPrimary,null))
-        }
         val textItem: TextView = cView.findViewById(R.id.auto_complete_item_text)
         textItem.text = getItem(position)
         return (cView)

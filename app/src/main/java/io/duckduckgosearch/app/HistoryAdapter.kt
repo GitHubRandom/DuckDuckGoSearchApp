@@ -4,24 +4,21 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HistoryAdapter internal constructor(private val context: Context, list: ArrayList<HistoryItem>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
     private var list: ArrayList<HistoryItem>
-    private val historyDatabase: HistoryDatabase
+    private var historyDatabase: HistoryDatabase? = null
     private var onLastTermDeleted: OnLastTermDeleted? = null
 
     internal interface OnLastTermDeleted {
@@ -35,19 +32,12 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         onLastTermDeleted = context as OnLastTermDeleted
-        if (PrefManager.isDarkTheme(context)) {
-            holder.icon.setImageDrawable(
-                    ResourcesCompat.getDrawable(context.resources,R.drawable.ic_outline_history_24px_white,null))
-            holder.deleteButton.setImageDrawable(
-                    ResourcesCompat.getDrawable(context.resources,R.drawable.ic_outline_delete_forever_24px_white,null))
-        }
         val searchTerm = list[position].searchTerm
         holder.term.text = list[position].searchTerm
         holder.date.text = calculatePastTime(list[position].searchDate)
         holder.root.setOnClickListener {
             val searchIntent = Intent(context, SearchActivity::class.java)
-            val bundle = Bundle()
-            bundle.putString("search_term", searchTerm)
+            val bundle = bundleOf("search_term" to searchTerm)
             searchIntent.putExtras(bundle)
             context.startActivity(searchIntent)
         }
@@ -56,8 +46,8 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
                 if (itemCount == 1) {
                     onLastTermDeleted!!.onLastTermDeleted()
                 }
-                historyDatabase.historyDao().delete(list[position])
-                list = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem>
+                historyDatabase?.historyDao()?.delete(list[position])
+                list = historyDatabase?.historyDao()?.allSearchHistory as ArrayList<HistoryItem>
                 list.reverse()
                 (context as Activity).runOnUiThread {
                     notifyItemRemoved(position)
@@ -73,14 +63,13 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var deleteButton: ImageButton = itemView.findViewById(R.id.history_item_button)
-        var icon: ImageView = itemView.findViewById(R.id.history_item_icon)
         var term: TextView = itemView.findViewById(R.id.history_item_term)
         var date: TextView = itemView.findViewById(R.id.history_item_date)
         var root: RelativeLayout = itemView.findViewById(R.id.history_item_root)
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun calculatePastTime(date: Date?): String {
+    private fun calculatePastTime(date: Date): String {
         val format: DateFormat = SimpleDateFormat("EEE. MMM d, yyyy")
         val formatDay: DateFormat = SimpleDateFormat("EEEE")
         val formatNoYear: DateFormat = SimpleDateFormat("EEE. MMM d")
@@ -89,15 +78,14 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
         val day = currentCalendar[Calendar.DAY_OF_YEAR]
         val year = currentCalendar[Calendar.YEAR]
         val calendarToCompare = Calendar.getInstance()
-        calendarToCompare.time = date!!
+        calendarToCompare.time = date
         val dayToCompare = calendarToCompare[Calendar.DAY_OF_YEAR]
         val yearToCompare = calendarToCompare[Calendar.YEAR]
         val diff = currentCalendar.timeInMillis - calendarToCompare.timeInMillis
-        val seconds: Long
+        val seconds: Long = diff / 1000
         val minutes: Long
         val hours: Long
         val days: Long
-        seconds = diff / 1000
         return if (seconds >= 60) {
             minutes = seconds / 60
             if (minutes >= 60) {
@@ -132,6 +120,6 @@ class HistoryAdapter internal constructor(private val context: Context, list: Ar
 
     init {
         this.list = list
-        historyDatabase = Room.databaseBuilder(context, HistoryDatabase::class.java, HistoryFragment.HISTORY_DB_NAME).build()
+        historyDatabase = HistoryDatabase.getHistoryDatabase(context)
     }
 }

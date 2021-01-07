@@ -1,6 +1,8 @@
 package io.duckduckgosearch.app
 
 import android.app.Activity
+import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -17,10 +19,9 @@ import android.widget.*
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
-import androidx.room.Room
+import androidx.fragment.app.commit
 import io.duckduckgosearch.app.ErrorFragment.OnReloadButtonClick
 import io.duckduckgosearch.app.WebViewFragment.*
 import io.duckduckgosearch.app.WebViewFragment.Companion.newInstance
@@ -28,7 +29,6 @@ import java.util.*
 
 class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdapter.OnItemClickListener, OnWebViewError, OnReloadButtonClick, OnPageFinish {
 
-    // Views initialization
     private lateinit var searchBar: DuckAutoCompleteTextView
     private lateinit var fragmentManager: FragmentManager
     private lateinit var progressBar: ProgressBar
@@ -39,28 +39,25 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
     private var latestTerm: String = ""
     private lateinit var intentSearchTerm: String
     private var webViewFragment: WebViewFragment? = null
+    private var errorFragment: ErrorFragment? = null
     private var adapter: AutoCompleteAdapter? = null
     private lateinit var manager: InputMethodManager
-    private lateinit var historyDatabase: HistoryDatabase
-    private var darkTheme = false
+    private var historyDatabase: HistoryDatabase? = null
     private var fromIntent = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        if (PrefManager.isDarkTheme(this)) {
-            setTheme(R.style.AppTheme_Dark_NoActionBar)
-            darkTheme = true
-        }
+        AppCompatDelegate.setDefaultNightMode(PrefManager.getThemeInt(this))
 
+        this.transparentStatusBar()
         // Enable WebView debugging from PC (Chrome)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
-
         setContentView(R.layout.activity_search)
-        historyDatabase = Room.databaseBuilder(this, HistoryDatabase::class.java, HistoryFragment.HISTORY_DB_NAME)
-                .build()
+        historyDatabase = HistoryDatabase.getHistoryDatabase(this)
         manager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         duckLogo = findViewById(R.id.duck_logo)
         fragmentManager = supportFragmentManager
@@ -89,9 +86,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         searchBar.setOnEditorActionListener(OnEditorActionListener { v, actionId, _ ->
             if (v.text.toString() != "" && actionId == EditorInfo.IME_ACTION_DONE) {
                 search(v.text.toString())
-                if (adapter != null) {
-                    adapter!!.notifyDataSetChanged()
-                }
+                adapter?.notifyDataSetChanged()
                 return@OnEditorActionListener true
             }
             false
@@ -99,7 +94,6 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString() == "") {
                     eraseTextButton.visibility = View.GONE
@@ -115,20 +109,30 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
                     searchBarRoot.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT)
                 }
-                if (webViewFragment != null) {
-                    fragmentManager.beginTransaction()
-                            .hide(webViewFragment!!)
-                            .commit()
+                webViewFragment?.let {
+                    fragmentManager.commit {
+                        hide(it)
+                    }
+                }
+                errorFragment?.let {
+                    fragmentManager.commit {
+                        hide(it)
+                    }
                 }
             } else {
                 duckLogo.visibility = View.VISIBLE
                 if (resources.getBoolean(R.bool.isTabletAndLandscape)) {
                     searchBarRoot.layoutParams = LinearLayout.LayoutParams(550, ViewGroup.LayoutParams.WRAP_CONTENT)
                 }
-                if (webViewFragment != null) {
-                    fragmentManager.beginTransaction()
-                            .show(webViewFragment!!)
-                            .commit()
+                webViewFragment?.let {
+                    fragmentManager.commit {
+                        show(it)
+                    }
+                }
+                errorFragment?.let {
+                    fragmentManager.commit {
+                        show(it)
+                    }
                 }
             }
         }
@@ -137,16 +141,27 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
             searchBar.requestFocus()
             manager.showSoftInput(searchBar, 0)
         }
-        if (darkTheme) {
-            findViewById<View>(R.id.search_bar_root).setBackgroundColor(
-                    ResourcesCompat.getColor(resources,R.color.darkThemeColorPrimary,null))
-            searchBarRoot.background = AppCompatResources.getDrawable(this, R.drawable.search_field_bg_dark)
-            findViewById<View>(R.id.frame_layout).setBackgroundColor(
-                    ResourcesCompat.getColor(resources,R.color.darkThemeColorPrimary,null))
-            eraseTextButton.setImageDrawable(
-                    AppCompatResources.getDrawable(this, R.drawable.ic_outline_close_24px_white))
-            findViewById<ImageView>(R.id.duck_logo).setImageDrawable(
-                    AppCompatResources.getDrawable(this,R.drawable.duckduckgo_white_logo))
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        webViewFragment = fragmentManager.getFragment(savedInstanceState,WebViewFragment.TAG) as WebViewFragment?
+        errorFragment = fragmentManager.getFragment(savedInstanceState,ErrorFragment.TAG) as ErrorFragment?
+        latestTerm = savedInstanceState.getString("latest_term","")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("latest_term",latestTerm)
+        webViewFragment?.let {
+            if (it.isAdded) {
+                fragmentManager.putFragment(outState, WebViewFragment.TAG, it)
+            }
+        }
+        errorFragment?.let {
+            if (it.isAdded) {
+                fragmentManager.putFragment(outState, ErrorFragment.TAG, it)
+            }
         }
     }
 
@@ -154,9 +169,23 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         searchBar.setText(searchTerm)
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (webViewFragment == null) {
+            finish()
+            startActivity(intent)
+        } else {
+            val relaunchIntent = Intent(this, SearchActivity::class.java)
+            relaunchIntent.putExtras(bundleOf("search_term" to latestTerm))
+            finish()
+            startActivity(relaunchIntent)
+        }
+    }
+
     override fun onBackPressed() {
-        if (searchBar.hasFocus() && webViewFragment != null) {
-            webViewFragment!!.requestFocusOnWebView()
+        if (searchBar.hasFocus() && (webViewFragment != null || errorFragment != null)) {
+            searchBar.clearFocus()
+            webViewFragment?.requestFocusOnWebView()
             searchBar.setText(latestTerm)
         } else {
             super.onBackPressed()
@@ -165,7 +194,7 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
 
     private fun adapterUpdate() {
         Thread {
-            val historyArrayList = historyDatabase.historyDao().allSearchHistory as ArrayList<HistoryItem>
+            val historyArrayList = historyDatabase?.historyDao()?.allSearchHistory as ArrayList<HistoryItem>
             historyArrayList.reverse()
             val historyArrayListStrings = ArrayList<String>()
             for (item in historyArrayList) {
@@ -187,9 +216,12 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
         if (fromIntent) {
             searchBar.setText(latestTerm)
         }
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, webViewFragment!!)
-                .commit()
+        webViewFragment?.let {
+            fragmentManager.commit {
+                replace(R.id.frame_layout, it)
+            }
+        }
+        errorFragment = null
         searchBar.clearFocus()
         searchBar.setSelection(0)
         manager.hideSoftInputFromWindow(searchBar.windowToken, 0)
@@ -203,9 +235,10 @@ class SearchActivity : AppCompatActivity(), OnSearchTermChange, AutoCompleteAdap
     override fun onWebViewError(errorCode: Int) {
         if (errorCode == WebViewClient.ERROR_HOST_LOOKUP || errorCode == WebViewClient.ERROR_TIMEOUT || errorCode == WebViewClient.ERROR_CONNECT) {
             progressBar.visibility = View.GONE
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, ErrorFragment())
-                    .commit()
+            errorFragment = ErrorFragment()
+            fragmentManager.commit {
+                replace(R.id.frame_layout, errorFragment!!)
+            }
         }
     }
 

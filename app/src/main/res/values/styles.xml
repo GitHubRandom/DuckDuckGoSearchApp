@@ -1,12 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="background">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="dialogCornerRadius">10dp</item>
+        <item name="dialogTheme">@style/AppThemeDialog</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -14,24 +18,8 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="colorPrimary">@color/darkThemeColorPrimary</item>
-        <item name="colorPrimaryDark">@color/darkThemeColorPrimary</item>
-        <item name="colorAccent">@color/darkThemeColorAccent</item>
-        <item name="android:windowBackground">@color/darkThemeColorPrimary</item>
-        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-        <item name="alertDialogTheme">@style/ListPreferenceStyle</item>
-    </style>
-
-    <style name="ListPreferenceStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
-        <item name="colorAccent">@color/darkThemeColorAccent</item>
-        <item name="dialogCornerRadius">10dp</item>
-    </style>
-
-    <style name="AppTheme.Dark.NoActionBar" parent="AppTheme.Dark">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppThemeDialog" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:background">@color/dialogBackground</item>
     </style>
 
 </resources>

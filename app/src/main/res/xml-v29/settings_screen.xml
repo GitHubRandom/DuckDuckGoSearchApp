@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:title="@string/settings_theme_title"
+        android:summary="@string/settings_theme_title"
+        android:key="search_theme"
+        android:entries="@array/settings_theme_entries"
+        android:entryValues="@array/settings_theme_values"
+        android:defaultValue="follow" />
+
+    <ListPreference
+        android:title="@string/settings_search_widget_theme_title"
+        android:summary="@string/settings_search_widget_theme_summary"
+        android:key="search_widget_theme"
+        android:entries="@array/settings_search_widget_theme_entries"
+        android:entryValues="@array/settings_search_widget_theme_values"
+        android:defaultValue="light" />
+
+    <SwitchPreference
+        android:title="@string/settings_search_history_title"
+        android:summary="@string/settings_search_history_summary"
+        android:key="search_history"
+        android:defaultValue="true"/>
+
+    <ListPreference
+        android:title="@string/settings_safe_search_title"
+        android:summary="@string/settings_safe_search_summary"
+        android:key="safe_search"
+        android:entries="@array/settings_safe_search_entries"
+        android:entryValues="@array/settings_safe_search_values"
+        android:defaultValue="moderate"/>
+
+    <Preference
+        android:title="@string/settings_delete_search_history_title"
+        android:key="delete_search_history" />
+
+    <Preference
+        android:title="@string/settings_about"
+        android:key="about_app"/>
+
+</PreferenceScreen>
