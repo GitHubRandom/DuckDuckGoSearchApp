@@ -1,4 +1,4 @@
-# DuckDuckGoSearchApp
+# DuckDuckGo Search App
 <p align="center">
 <img src="feature-themes.png" height="300" ></img>
 </p>
